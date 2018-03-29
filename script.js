@@ -1,127 +1,298 @@
-var worldCup = d3.select("#map").append("svg")
-.attr("width", 1040)
-.attr("height", 1200)
+var SVG_HEIGHT = 950;
+var SVG_WIDTH = 1100;
+var DETAILS_WIDTH = 280;
+var TEAM_SPACING = 3;
+var DETAILS_TEAM_SPACING = 10;
+var ROUND_HEIGHT = 120;
+var FLAG_WIDTH = 25;
+var DETAILS_FLAG_WIDTH = 100;
+var TIMELINE_BAR_WIDTH = 10;
+var FIRST_MATCH = true;
 
-function drawGroup(groupNo) {
+function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
 
-    var nations = [{"name": "A", "color": "red"},
-                   {"name": "B", "color": "blue"},
-                   {"name": "C", "color": "green"},
-                   {"name": "D", "color": "purple"}];
-    var matches = function(nations) {
-        m = []
-        m.push({"home": nations[0], "away": nations[1], "homeWin": 10, "awayWin": 25});
-        m.push({"home": nations[2], "away": nations[3], "homeWin": 10, "awayWin": 9})
-        m.push({"home": nations[3], "away": nations[0], "homeWin": 0, "awayWin": 25})
-        m.push({"home": nations[1], "away": nations[2], "homeWin": 45, "awayWin": 25})
-        m.push({"home": nations[0], "away": nations[2], "homeWin": 25, "awayWin": 25})
-        m.push({"home": nations[1], "away": nations[3], "homeWin": 10, "awayWin": 25})
-        return m
-    }
-    var groupMatches = matches(nations);
+    var numberOfMatches = matchesData.length;
+    var matchWidth = SVG_WIDTH / numberOfMatches;
 
-    var GROUP_WIDTH = 130;
-    var GROUP_MID = GROUP_WIDTH / 2;
-    var GROUP_HEIGHT = 300;
-    var NATION_SPACING = GROUP_HEIGHT / groupMatches.length;
-    var NATION_RADIUS = 5;
-
-    var group = worldCup
-    .append("g")
-    .attr("width", GROUP_WIDTH)
-    .attr("height", GROUP_HEIGHT)
-    .attr("transform", "translate(" + groupNo*GROUP_WIDTH + ",0)")
-
-    group.append("text")
-    .text("Group " + String.fromCharCode(97 + groupNo).toUpperCase())
-    .attr("x", GROUP_MID)
+    var round = matchLayer.append("g")
+    .attr("class", "round")
+    .attr("transform", "translate(0," + matchNum * ROUND_HEIGHT + ")")
+    
+    var roundHeader = round.append("text")
+    .attr("class", "round-header")
+    .attr("x", SVG_WIDTH/2)
     .attr("y", 10)
-    .style("font-size", "10px")
-    .style("alignment-baseline", "middle")
     .style("text-anchor", "middle")
+    .text(roundHeading)
 
-    group.append("rect")
-    .attr("width", 1)
-    .attr("height", GROUP_HEIGHT - NATION_SPACING)
-    .style("fill", "#ccc")
-    .attr("transform", "translate(" + GROUP_MID + "," + NATION_SPACING/2 + ")");
+    var matches = round.append("g").attr("class", "matches")
+    .attr("transform", "translate(0, 20)")
 
-    group.append("g").attr("class", "match-circles")
-    .selectAll(".matches")
-    .data(groupMatches).enter()
-    .append("circle")
-    .attr("r", NATION_RADIUS)
-    .style("fill", (d) => d.home.color)
-    .attr("cx", GROUP_MID - NATION_RADIUS + 1)
-    .attr("cy", (d, idx) => (idx * NATION_SPACING) + NATION_SPACING/2)
+    var match = matches.selectAll(".match")
+    .data(matchesData).enter()
+    .append("g").attr("class", "match")
+    .attr("transform", (d, idx) => "translate(" +  idx*matchWidth + ",0)");
 
-    group.append("g").attr("class", "match-circles")
-    .selectAll(".matches")
-    .data(groupMatches).enter()
-    .append("circle")
-    .attr("r", NATION_RADIUS)
-    .style("fill", d => d.away.color)
-    .attr("cx", GROUP_MID + NATION_RADIUS - 1)
-    .attr("cy", (d, idx) => (idx * NATION_SPACING) + NATION_SPACING/2)
+    var hometeam = match.append("g").attr("class", "home-team")
+    .attr("transform", "translate(" + (matchWidth/2-25-TEAM_SPACING) + ", 5)")
 
-    var nationLines = group.append("g").attr("class", "nation-lines")
+    hometeam.append("rect")
+    .attr("class", "flag")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 25)
+    .attr("height", 15)
+    .style("opacity", 0.4)
 
-    nations.forEach(function (nation, nationID) {
-        var ARC_WIDTH = 1
-        var PIVOT_X_SHIFT = 0
-        var nationMatches = []
-        groupMatches.forEach(function (match, idx) {
-            if (match.home == nation) {
-                targetX = (GROUP_MID - NATION_RADIUS + 1)
-                targetY = (idx * NATION_SPACING) + NATION_SPACING/2
-                nationMatches.push([targetX, targetY, true, (match.homeWin > match.awayWin)])
-            } else if (match.away == nation) {
-                targetX = (GROUP_MID + NATION_RADIUS - 1)
-                targetY = (idx * NATION_SPACING) + NATION_SPACING/2
-                nationMatches.push([targetX, targetY, false, (match.homeWin < match.awayWin)])
-            }
-        })
-        var path = "";
-        path = "M " + nationMatches[0][0] + " " + nationMatches[0][1]
-        for (var i = 1; i < 3; i++) {
-            targetX = nationMatches[i][0] 
-            targetY = nationMatches[i][1] 
-            pivotX = ((nationMatches[i][2]) ? GROUP_MID/2 - (nationID * PIVOT_X_SHIFT) : GROUP_MID*1.5 + (nationID * PIVOT_X_SHIFT)) 
-            pivotY = (targetY - nationMatches[i-1][1]) / 2 + nationMatches[i-1][1]
-            path += " Q " + pivotX +  " " + pivotY + " " + targetX + " " + targetY
-        }
-        for (var i = 1; i >= 0; i--) {
-            // console.log(nationMatches[i])
-            // if (nationMatches[i][3]) {
-            //     ARC_WIDTH = 20
-            // }
-            targetX = nationMatches[i][0] 
-            targetY = nationMatches[i][1] 
-            pivotX = ((nationMatches[i+1][2]) ? GROUP_MID/2 + ARC_WIDTH  - (nationID * PIVOT_X_SHIFT) : GROUP_MID*1.5 - ARC_WIDTH + (nationID * PIVOT_X_SHIFT)) 
-            pivotY = (targetY - nationMatches[i+1][1]) / 2 + nationMatches[i+1][1]
-            path += " Q " + pivotX +  " " + pivotY + " " + targetX + " " + targetY
-        }
-        nationLines
-        .append("path")
-        .attr("d", path)
-        .style("fill", nation.color)
-        .style("stroke", nation.color)
-        .style("stroke-width", 1)
-        .style("opacity", 0.4)
-        .on("mouseover", function (d) {
-            var nationLine = d3.select(this);
-            nationLine.style("opacity", 1);
-        })
-        .on("mouseout", function (d) {
-            var nationLine = d3.select(this);
-            nationLine.style("opacity", 0.4);
-        })
-    })
+    hometeam.append("text")
+    .attr("class", "team-label")
+    .attr("x", 25)
+    .attr("y", 30)
+    .style("text-anchor", "end")
+    .text((d) => d.home)
+
+    hometeam.append("text")
+    .attr("class", "goal-label")
+    .attr("x", 12)
+    .attr("y", 50)
+    .style("text-anchor", "middle")
+    .text((d) => d.homeScore)
+
+    var awayteam = match.append("g").attr("class", "away-team")
+    .attr("transform", "translate(" + (matchWidth/2+TEAM_SPACING) + ", 5)")
+
+    awayteam.append("rect")
+    .attr("class", "flag")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 25)
+    .attr("height", 15)
+    .style("opacity", 0.4)
+
+    awayteam.append("text")
+    .attr("class", "team-label")
+    .attr("x", 0)
+    .attr("y", 30)
+    .style("text-anchor", "start")
+    .text((d) => d.away)
+
+    awayteam.append("text")
+    .attr("class", "goal-label")
+    .attr("x", 12)
+    .attr("y", 50)
+    .style("text-anchor", "middle")
+    .text((d) => d.awayScore)
+
+    match.append("rect")
+    .attr("class", "match-rect")
+    .attr("width", matchWidth)
+    .attr("height", 70)
+    .attr("stroke", "black")
+    .style("fill", function() {
+        if (FIRST_MATCH) {
+            FIRST_MATCH = false;
+            return "white"
+        } else {
+            return "black"
+        }})
+    .style("opacity", 0.1)
+    .on("click", function(d) {
+        d3.selectAll(".match-rect").style("fill", "black")
+        d3.select(this).style("fill", "white")
+        populateDetails(d,  matchNum * ROUND_HEIGHT, generateTimeline(40))
+    });
 }
 
-for(var i = 0; i < 8; i++) {    
-    drawGroup(i)
+d3.select("#tournament").style("width", SVG_WIDTH)
+d3.select("#trophy").style("width", SVG_WIDTH)
+d3.select("#credits").style("width", SVG_WIDTH)
+var svg = d3.select("#tournament").append("svg").attr("width", SVG_WIDTH).attr("height",  SVG_HEIGHT)
+
+// Dummy Data Generation
+var randomScore = () => Math.floor(Math.random() * 10);
+var generateMatches = function (size) {
+    dummyData = []
+    for(var i = 0; i < size; i++) {
+        dummyData.push({"home": "HOM", "away": "AWA", "homeScore": randomScore(), awayScore: randomScore()})
+    }
+    return dummyData;
 }
 
+var grpMatch1 = generateMatches(16)
+var matchLayer = svg.append("g").attr("class", "match-layer")
+drawRound16(0, "Group Stage Match #1", grpMatch1, matchLayer);
+drawRound16(1, "Group Stage Match #2", generateMatches(16), matchLayer);
+drawRound16(2, "Group Stage Match #3", generateMatches(16), matchLayer);
+drawRound16(3, "Round of 16", generateMatches(8), matchLayer);
+drawRound16(4, "Quarter Finals", generateMatches(4), matchLayer);
+drawRound16(5, "Semi Finals", generateMatches(2), matchLayer);
+drawRound16(6, "", generateMatches(2), matchLayer);
 
-// TODO: Knockout stages
+var championRound = matchLayer.append("g")
+.attr("class", "round")
+.attr("transform", "translate(0," + (7 * ROUND_HEIGHT + 50) + ")")
+
+var championLabel = championRound.append("text")
+.attr("class", "round-header")
+.attr("x", SVG_WIDTH/2)
+.attr("y", 10)
+.style("font-size", "20px")
+.style("text-anchor", "middle")
+.text("CHAMPIONS")
+
+var championNation = championRound.append("text")
+.attr("class", "round-header")
+.attr("x", SVG_WIDTH/2)
+.attr("y", 32)
+.style("font-size", "16px")
+.style("text-anchor", "middle")
+.text("GERMANY")
+
+
+// Dummy Data Generation
+var randomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+var generateTimeline = function (size) {
+    dummyData = []
+    for(var i = 0; i < size; i++) {
+        dummyData.push({"homeScore": randomScore(), awayScore: randomScore(), "date": randomDate(new Date(1928, 1, 1), new Date())})
+    }
+    return dummyData;
+}
+
+function populateDetails(selectedMatch, yPosition, detailsMatches) {
+
+    d3.select("#details").selectAll("*").remove();
+
+    // set Width and Height for details container
+    d3.select("#details").style("width", DETAILS_WIDTH);
+    var svgDetails =  d3.select("#details").append("svg")
+    .attr("width", DETAILS_WIDTH)
+    .attr("height", (detailsMatches.length+2)*TIMELINE_BAR_WIDTH + 160)
+    .attr("transform", "translate(0," + yPosition + ")")
+    .style("background-color", "rgba(255, 255, 255, 0.1)")
+
+    var details = svgDetails.append("g")
+
+    var detailsHeader = details.append("g").attr("class", "details-header")
+    .attr("transform", "translate(0, 20)")
+
+    var hometeam = detailsHeader.append("g").attr("class", "home-team")
+    .attr("transform", "translate(" + (DETAILS_WIDTH/2-DETAILS_FLAG_WIDTH-DETAILS_TEAM_SPACING) + ", 0)")
+
+    hometeam.append("rect")
+    .attr("class", "flag")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", DETAILS_FLAG_WIDTH)
+    .attr("height", DETAILS_FLAG_WIDTH * 0.6)
+    .style("opacity", 0.4)
+
+    hometeam.append("text")
+    .attr("class", "team-label")
+    .attr("x", DETAILS_FLAG_WIDTH)
+    .attr("y", 80)
+    .style("text-anchor", "end")
+    .text(selectedMatch.home)
+
+    hometeam.append("text")
+    .attr("class", "goal-label")
+    .attr("x", 77)
+    .attr("y", 100)
+    .style("text-anchor", "middle")
+    .text(selectedMatch.homeScore)
+
+    var awayteam = detailsHeader.append("g").attr("class", "away-team")
+    .attr("transform", "translate(" + (DETAILS_WIDTH/2+DETAILS_TEAM_SPACING) + ", 0)")
+
+    awayteam.append("rect")
+    .attr("class", "flag")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", DETAILS_FLAG_WIDTH)
+    .attr("height", DETAILS_FLAG_WIDTH * 0.6)
+    .style("opacity", 0.4)
+
+    awayteam.append("text")
+    .attr("class", "team-label")
+    .attr("x", 0)
+    .attr("y", 80)
+    .style("text-anchor", "start")
+    .text(selectedMatch.away)
+
+    awayteam.append("text")
+    .attr("class", "goal-label")
+    .attr("x", 22)
+    .attr("y", 100)
+    .style("text-anchor", "middle")
+    .text(selectedMatch.awayScore)
+
+    var timeline = details.append("g").attr("class", "details-timeline")
+    .attr("transform", "translate(" + 0 + "," +  140 + ")")
+
+    timeline.append("rect")
+    .attr("class", "timeline-rect")
+    .attr("width", DETAILS_WIDTH)
+    .attr("height", (detailsMatches.length+2) * TIMELINE_BAR_WIDTH)
+    .style("opacity", 0.1);
+
+    var xScale = d3.scaleLinear().domain([0, 10]).range([DETAILS_WIDTH/2, DETAILS_WIDTH]);
+    var yScale = d3.scaleLinear().domain([0, detailsMatches.length-1]).range([TIMELINE_BAR_WIDTH, TIMELINE_BAR_WIDTH*(detailsMatches.length+1)]);
+
+    detailsMatches.forEach(function (d, idx) {
+        var timelineMatch = timeline.append("g")
+        .attr("class", "timeline-match")
+
+        timelineMatch.append("line")
+        .attr("class", "timeline-home-score timeline-" + idx)
+        .style("stroke-width", TIMELINE_BAR_WIDTH)
+        .attr("stroke", "red" )
+        .attr("opacity", 0.7)
+        .attr("x1", xScale(0))
+        .attr("x2", xScale(-d.homeScore))
+        .attr("y1", 0)
+        .attr("y2", 0)
+        .transition().delay(0).duration(1000)
+        .attr("y1", yScale(idx))
+        .attr("y2", yScale(idx))
+
+        timelineMatch.append("line")
+        .attr("class", "timeline-away-score timeline-" + idx)
+        .style("stroke-width", TIMELINE_BAR_WIDTH)
+        .attr("stroke", "green" )
+        .attr("opacity", 0.7)
+        .attr("x1", xScale(0))
+        .attr("x2", xScale(d.awayScore))
+        .attr("y1", 0)
+        .attr("y2", 0)
+        .transition().delay(0).duration(1000)
+        .attr("y1", yScale(idx))
+        .attr("y2", yScale(idx))
+
+        timelineMatch.append("rect")
+        .attr("class", "timeline-rect-" + idx)
+        .attr("height", TIMELINE_BAR_WIDTH)
+        .attr("width", DETAILS_WIDTH)
+        .attr("x", 0)
+        .attr("y", yScale(idx) - TIMELINE_BAR_WIDTH*0.5)
+        .attr("fill", "grey")
+        .attr("opacity", 0)
+        .on("mouseover", function() {
+            d3.selectAll(".timeline-rect-"+idx).attr("opacity", 0.2)
+            d3.selectAll(".timeline-"+idx).attr("opacity", 1.0)
+        })
+        .on("mouseout", function() {
+            d3.selectAll(".timeline-rect-"+idx).attr("opacity", 0)
+            d3.selectAll(".timeline-"+idx).attr("opacity", 0.7)
+        })
+    });
+
+    timeline.append("line")
+    .style("stroke-width", 1)
+    .attr("x1", DETAILS_WIDTH/2)
+    .attr("x2", DETAILS_WIDTH/2)
+    .attr("y1", 0)
+    .attr("y2", (detailsMatches.length+2)*TIMELINE_BAR_WIDTH)
+    .attr("stroke", "black")
+}
+
+populateDetails(grpMatch1[0], 0, generateTimeline(40))

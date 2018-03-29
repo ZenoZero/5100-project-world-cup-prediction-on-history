@@ -1,4 +1,53 @@
 body {
     margin: 0 auto;
-    padding: 0 20px;
+    width: 100%;
+    padding: 20px;
+    background-color: #0f4583;
+    color: white;
+    font-family: Gotham,HelveticaNeue,"Helvetica Neue",Helvetica;
+}
+
+svg text {
+    fill: white;
+}
+
+.row {
+    float: left;
+}
+#tournament {
+    font-size: 10px;
+    float: left;
+    margin-right: 20px;
+}
+
+#details {
+    float: left;
+}
+
+#details svg {
+    margin-bottom: 40px;
+}
+
+.goal-label {
+    font-size: 16px;
+}
+
+.match-rect:hover {
+    cursor: pointer;
+}
+
+.match-rect.selected {
+    opacity: 1.0;
+}
+
+#trophy {
+    clear: both;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+#credits {
+    text-align: center; 
+    font-size: 12px;
+    margin-bottom: 40px;
 }
