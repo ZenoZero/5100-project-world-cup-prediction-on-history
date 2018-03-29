@@ -8,6 +8,7 @@ var FLAG_WIDTH = 25;
 var DETAILS_FLAG_WIDTH = 100;
 var TIMELINE_BAR_WIDTH = 10;
 var FIRST_MATCH = true;
+var flagLinks = [];
 
 function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
 
@@ -42,7 +43,7 @@ function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
     .attr("y", 0)
     .attr("width", 25)
     .attr("height", 15)
-    .style("opacity", 0.4)
+    .attr("fill", (d) => "url(#countryName" + d.homeFlagID + ")")
 
     hometeam.append("text")
     .attr("class", "team-label")
@@ -67,7 +68,7 @@ function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
     .attr("y", 0)
     .attr("width", 25)
     .attr("height", 15)
-    .style("opacity", 0.4)
+    .attr("fill", (d) => "url(#countryName" + d.awayFlagID + ")")
 
     awayteam.append("text")
     .attr("class", "team-label")
@@ -103,62 +104,6 @@ function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
     });
 }
 
-d3.select("#tournament").style("width", SVG_WIDTH)
-d3.select("#trophy").style("width", SVG_WIDTH)
-d3.select("#credits").style("width", SVG_WIDTH)
-var svg = d3.select("#tournament").append("svg").attr("width", SVG_WIDTH).attr("height",  SVG_HEIGHT)
-
-// Dummy Data Generation
-var randomScore = () => Math.floor(Math.random() * 10);
-var generateMatches = function (size) {
-    dummyData = []
-    for(var i = 0; i < size; i++) {
-        dummyData.push({"home": "HOM", "away": "AWA", "homeScore": randomScore(), awayScore: randomScore()})
-    }
-    return dummyData;
-}
-
-var grpMatch1 = generateMatches(16)
-var matchLayer = svg.append("g").attr("class", "match-layer")
-drawRound16(0, "Group Stage Match #1", grpMatch1, matchLayer);
-drawRound16(1, "Group Stage Match #2", generateMatches(16), matchLayer);
-drawRound16(2, "Group Stage Match #3", generateMatches(16), matchLayer);
-drawRound16(3, "Round of 16", generateMatches(8), matchLayer);
-drawRound16(4, "Quarter Finals", generateMatches(4), matchLayer);
-drawRound16(5, "Semi Finals", generateMatches(2), matchLayer);
-drawRound16(6, "", generateMatches(2), matchLayer);
-
-var championRound = matchLayer.append("g")
-.attr("class", "round")
-.attr("transform", "translate(0," + (7 * ROUND_HEIGHT + 50) + ")")
-
-var championLabel = championRound.append("text")
-.attr("class", "round-header")
-.attr("x", SVG_WIDTH/2)
-.attr("y", 10)
-.style("font-size", "20px")
-.style("text-anchor", "middle")
-.text("CHAMPIONS")
-
-var championNation = championRound.append("text")
-.attr("class", "round-header")
-.attr("x", SVG_WIDTH/2)
-.attr("y", 32)
-.style("font-size", "16px")
-.style("text-anchor", "middle")
-.text("GERMANY")
-
-
-// Dummy Data Generation
-var randomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-var generateTimeline = function (size) {
-    dummyData = []
-    for(var i = 0; i < size; i++) {
-        dummyData.push({"homeScore": randomScore(), awayScore: randomScore(), "date": randomDate(new Date(1928, 1, 1), new Date())})
-    }
-    return dummyData;
-}
-
 function populateDetails(selectedMatch, yPosition, detailsMatches) {
 
     d3.select("#details").selectAll("*").remove();
@@ -185,7 +130,7 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
     .attr("y", 0)
     .attr("width", DETAILS_FLAG_WIDTH)
     .attr("height", DETAILS_FLAG_WIDTH * 0.6)
-    .style("opacity", 0.4)
+    .attr("fill", "url(#countryNameBigger" + selectedMatch.homeFlagID + ")")
 
     hometeam.append("text")
     .attr("class", "team-label")
@@ -210,7 +155,7 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
     .attr("y", 0)
     .attr("width", DETAILS_FLAG_WIDTH)
     .attr("height", DETAILS_FLAG_WIDTH * 0.6)
-    .style("opacity", 0.4)
+    .attr("fill", "url(#countryNameBigger" + selectedMatch.awayFlagID + ")")
 
     awayteam.append("text")
     .attr("class", "team-label")
@@ -251,7 +196,7 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
         .attr("x2", xScale(-d.homeScore))
         .attr("y1", 0)
         .attr("y2", 0)
-        .transition().delay(0).duration(1000)
+        .transition().delay(1000).duration(1000)
         .attr("y1", yScale(idx))
         .attr("y2", yScale(idx))
 
@@ -264,7 +209,7 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
         .attr("x2", xScale(d.awayScore))
         .attr("y1", 0)
         .attr("y2", 0)
-        .transition().delay(0).duration(1000)
+        .transition().delay(1000).duration(1000)
         .attr("y1", yScale(idx))
         .attr("y2", yScale(idx))
 
@@ -295,4 +240,91 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
     .attr("stroke", "black")
 }
 
-populateDetails(grpMatch1[0], 0, generateTimeline(40))
+// Dummy Data Generation
+var randomScore = () => Math.floor(Math.random() * 10);
+var generateMatches = function (size) {
+    dummyData = []
+    for(var i = 0; i < size; i++) {
+        dummyData.push({home: "HOM", away: "AWA", homeScore: randomScore(), awayScore: randomScore(), homeFlagID: randomScore(), awayFlagID: randomScore()})
+    }
+    return dummyData;
+}
+
+// Dummy Data Generation
+var randomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+var generateTimeline = function (size) {
+    dummyData = []
+    for(var i = 0; i < size; i++) {
+        dummyData.push({"homeScore": randomScore(), awayScore: randomScore(), "date": randomDate(new Date(1928, 1, 1), new Date())})
+    }
+    return dummyData;
+}
+
+d3.select("#tournament").style("width", SVG_WIDTH)
+d3.select("#trophy").style("width", SVG_WIDTH)
+d3.select("#credits").style("width", SVG_WIDTH)
+
+var svg = d3.select("#tournament").append("svg")
+.attr("width", SVG_WIDTH)
+.attr("height",  SVG_HEIGHT)
+
+d3.queue()
+.defer(d3.csv, "countries_flag_links.csv")
+.await(ready);
+
+function ready(error, flags){
+    var defs = svg.append("defs");
+    flagLinks = flags;
+    flagLinks.forEach(function (flag, idx) {
+        defs.append("pattern")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("id", "countryName" + idx)
+        .attr("patternUnits", "userSpaceOnUse")
+        .append("image")
+        .attr("width", 25)
+        .attr("height", 15)
+        .attr("xlink:href", flag.url)
+
+        defs.append("pattern")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("id", "countryNameBigger" + idx)
+        .attr("patternUnits", "userSpaceOnUse")
+        .append("image")
+        .attr("width", DETAILS_FLAG_WIDTH)
+        .attr("height", DETAILS_FLAG_WIDTH * 0.6)
+        .attr("xlink:href", flag.url)
+    })
+    var grpMatch1 = generateMatches(16)
+    var matchLayer = svg.append("g").attr("class", "match-layer")
+    drawRound16(0, "Group Stage Match #1", grpMatch1, matchLayer);
+    drawRound16(1, "Group Stage Match #2", generateMatches(16), matchLayer);
+    drawRound16(2, "Group Stage Match #3", generateMatches(16), matchLayer);
+    drawRound16(3, "Round of 16", generateMatches(8), matchLayer);
+    drawRound16(4, "Quarter Finals", generateMatches(4), matchLayer);
+    drawRound16(5, "Semi Finals", generateMatches(2), matchLayer);
+    drawRound16(6, "", generateMatches(2), matchLayer);
+
+    var championRound = matchLayer.append("g")
+    .attr("class", "round")
+    .attr("transform", "translate(0," + (7 * ROUND_HEIGHT + 50) + ")")
+
+    var championLabel = championRound.append("text")
+    .attr("class", "round-header")
+    .attr("x", SVG_WIDTH/2)
+    .attr("y", 10)
+    .style("font-size", "20px")
+    .style("text-anchor", "middle")
+    .text("CHAMPIONS")
+
+    var championNation = championRound.append("text")
+    .attr("class", "round-header")
+    .attr("x", SVG_WIDTH/2)
+    .attr("y", 32)
+    .style("font-size", "16px")
+    .style("text-anchor", "middle")
+    .text("GERMANY")
+
+    populateDetails(grpMatch1[0], 0, generateTimeline(40))
+}
