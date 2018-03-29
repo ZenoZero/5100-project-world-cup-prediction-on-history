@@ -7,7 +7,7 @@ var ROUND_HEIGHT = 120;
 var FLAG_WIDTH = 25;
 var DETAILS_FLAG_WIDTH = 100;
 var TIMELINE_BAR_WIDTH = 10;
-var FIRST_MATCH = true;
+var FIRST_MATCH = false;
 var flagLinks = [];
 
 function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
@@ -34,55 +34,38 @@ function drawRound16(matchNum, roundHeading, matchesData, matchLayer) {
     .append("g").attr("class", "match")
     .attr("transform", (d, idx) => "translate(" +  idx*matchWidth + ",0)");
 
-    var hometeam = match.append("g").attr("class", "home-team")
-    .attr("transform", "translate(" + (matchWidth/2-25-TEAM_SPACING) + ", 5)")
+    ['home', 'away'].forEach(function (side) {
 
-    hometeam.append("rect")
-    .attr("class", "flag")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", 25)
-    .attr("height", 15)
-    .attr("fill", (d) => "url(#countryName" + d.homeFlagID + ")")
+        var team = match.append("g").attr("class", side + "-team")
+        .attr("transform", "translate(" + (matchWidth/2-25-TEAM_SPACING) + ", 5)")
 
-    hometeam.append("text")
-    .attr("class", "team-label")
-    .attr("x", 25)
-    .attr("y", 30)
-    .style("text-anchor", "end")
-    .text((d) => d.home)
-
-    hometeam.append("text")
-    .attr("class", "goal-label")
-    .attr("x", 12)
-    .attr("y", 50)
-    .style("text-anchor", "middle")
-    .text((d) => d.homeScore)
-
-    var awayteam = match.append("g").attr("class", "away-team")
-    .attr("transform", "translate(" + (matchWidth/2+TEAM_SPACING) + ", 5)")
-
-    awayteam.append("rect")
-    .attr("class", "flag")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", 25)
-    .attr("height", 15)
-    .attr("fill", (d) => "url(#countryName" + d.awayFlagID + ")")
-
-    awayteam.append("text")
-    .attr("class", "team-label")
-    .attr("x", 0)
-    .attr("y", 30)
-    .style("text-anchor", "start")
-    .text((d) => d.away)
-
-    awayteam.append("text")
-    .attr("class", "goal-label")
-    .attr("x", 12)
-    .attr("y", 50)
-    .style("text-anchor", "middle")
-    .text((d) => d.awayScore)
+        team.append("rect")
+        .attr("class", "flag")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 25)
+        .attr("height", 15)
+        .attr("fill", (d) => "url(#countryName" + d[side].flagID + ")")
+        
+        var teamLabel = team.append("text")
+        .attr("class", "team-label")
+        .attr("y", 30)
+        .attr("x", 25)
+        .style("text-anchor", "end")
+        .text((d) => d[side].name)
+    
+        var goalLabel = team.append("text")
+        .attr("class", "goal-label")
+        .attr("x", 12)
+        .attr("y", 50)
+        .style("text-anchor", "middle")
+        .text((d) => d[side].score)
+        
+        if (side == "away") {
+            team.attr("transform", "translate(" + (matchWidth/2+TEAM_SPACING) + ", 5)")
+            teamLabel.attr("x", 0).style("text-anchor", "start")
+        }
+    })
 
     match.append("rect")
     .attr("class", "match-rect")
@@ -119,57 +102,41 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
     var details = svgDetails.append("g")
 
     var detailsHeader = details.append("g").attr("class", "details-header")
-    .attr("transform", "translate(0, 20)")
+    .attr("transform", "translate(0, 20)");
 
-    var hometeam = detailsHeader.append("g").attr("class", "home-team")
-    .attr("transform", "translate(" + (DETAILS_WIDTH/2-DETAILS_FLAG_WIDTH-DETAILS_TEAM_SPACING) + ", 0)")
+    ['home', 'away'].forEach(function (side) {
+        var team = detailsHeader.append("g").attr("class", side + "-team")
+        .attr("transform", "translate(" + (DETAILS_WIDTH/2-DETAILS_FLAG_WIDTH-DETAILS_TEAM_SPACING) + ", 0)")
 
-    hometeam.append("rect")
-    .attr("class", "flag")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", DETAILS_FLAG_WIDTH)
-    .attr("height", DETAILS_FLAG_WIDTH * 0.6)
-    .attr("fill", "url(#countryNameBigger" + selectedMatch.homeFlagID + ")")
+        team.append("rect")
+        .attr("class", "flag")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", DETAILS_FLAG_WIDTH)
+        .attr("height", DETAILS_FLAG_WIDTH * 0.6)
+        .attr("fill", "url(#countryNameBigger" + selectedMatch[side].flagID + ")")
+        
+        var teamLabel = team.append("text")
+        .attr("class", "team-label")
+        .attr("x", DETAILS_FLAG_WIDTH)
+        .attr("y", 80)
+        .style("text-anchor", "end")
+        .text(selectedMatch[side].name)
+    
+        var goalLabel = team.append("text")
+        .attr("class", "goal-label")
+        .attr("x", 77)
+        .attr("y", 100)
+        .style("text-anchor", "middle")
+        .text(selectedMatch[side].score)
 
-    hometeam.append("text")
-    .attr("class", "team-label")
-    .attr("x", DETAILS_FLAG_WIDTH)
-    .attr("y", 80)
-    .style("text-anchor", "end")
-    .text(selectedMatch.home)
-
-    hometeam.append("text")
-    .attr("class", "goal-label")
-    .attr("x", 77)
-    .attr("y", 100)
-    .style("text-anchor", "middle")
-    .text(selectedMatch.homeScore)
-
-    var awayteam = detailsHeader.append("g").attr("class", "away-team")
-    .attr("transform", "translate(" + (DETAILS_WIDTH/2+DETAILS_TEAM_SPACING) + ", 0)")
-
-    awayteam.append("rect")
-    .attr("class", "flag")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", DETAILS_FLAG_WIDTH)
-    .attr("height", DETAILS_FLAG_WIDTH * 0.6)
-    .attr("fill", "url(#countryNameBigger" + selectedMatch.awayFlagID + ")")
-
-    awayteam.append("text")
-    .attr("class", "team-label")
-    .attr("x", 0)
-    .attr("y", 80)
-    .style("text-anchor", "start")
-    .text(selectedMatch.away)
-
-    awayteam.append("text")
-    .attr("class", "goal-label")
-    .attr("x", 22)
-    .attr("y", 100)
-    .style("text-anchor", "middle")
-    .text(selectedMatch.awayScore)
+        if (side == "away") {
+            team.attr("transform", "translate(" + (DETAILS_WIDTH/2+DETAILS_TEAM_SPACING) + ", 0)")
+            teamLabel.attr("x", 0).style("text-anchor", "start")
+            goalLabel.attr("x", 22)
+        }
+    
+    })
 
     var timeline = details.append("g").attr("class", "details-timeline")
     .attr("transform", "translate(" + 0 + "," +  140 + ")")
@@ -193,10 +160,10 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
         .attr("stroke", "red" )
         .attr("opacity", 0.7)
         .attr("x1", xScale(0))
-        .attr("x2", xScale(-d.homeScore))
+        .attr("x2", xScale(-d.home.score))
         .attr("y1", 0)
         .attr("y2", 0)
-        .transition().delay(1000).duration(1000)
+        .transition().delay(0).duration(1000)
         .attr("y1", yScale(idx))
         .attr("y2", yScale(idx))
 
@@ -206,10 +173,10 @@ function populateDetails(selectedMatch, yPosition, detailsMatches) {
         .attr("stroke", "green" )
         .attr("opacity", 0.7)
         .attr("x1", xScale(0))
-        .attr("x2", xScale(d.awayScore))
+        .attr("x2", xScale(d.away.score))
         .attr("y1", 0)
         .attr("y2", 0)
-        .transition().delay(1000).duration(1000)
+        .transition().delay(0).duration(1000)
         .attr("y1", yScale(idx))
         .attr("y2", yScale(idx))
 
@@ -245,7 +212,10 @@ var randomScore = () => Math.floor(Math.random() * 10);
 var generateMatches = function (size) {
     dummyData = []
     for(var i = 0; i < size; i++) {
-        dummyData.push({home: "HOM", away: "AWA", homeScore: randomScore(), awayScore: randomScore(), homeFlagID: randomScore(), awayFlagID: randomScore()})
+        dummyData.push({
+            home: {name: "HOM", score: randomScore(), flagID: randomScore()}, 
+            away: {name: "AWA", score: randomScore(), flagID: randomScore()}
+        });
     }
     return dummyData;
 }
@@ -255,11 +225,16 @@ var randomDate = (start, end) => new Date(start.getTime() + Math.random() * (end
 var generateTimeline = function (size) {
     dummyData = []
     for(var i = 0; i < size; i++) {
-        dummyData.push({"homeScore": randomScore(), awayScore: randomScore(), "date": randomDate(new Date(1928, 1, 1), new Date())})
+        dummyData.push({
+            home: {score: randomScore()}, 
+            away: {score: randomScore()},
+            date: randomDate(new Date(1928, 1, 1), new Date())
+        });
     }
     return dummyData;
 }
 
+var controls = d3.select("#controls")
 d3.select("#tournament").style("width", SVG_WIDTH)
 d3.select("#trophy").style("width", SVG_WIDTH)
 d3.select("#credits").style("width", SVG_WIDTH)
@@ -296,6 +271,8 @@ function ready(error, flags){
         .attr("height", DETAILS_FLAG_WIDTH * 0.6)
         .attr("xlink:href", flag.url)
     })
+
+
     var grpMatch1 = generateMatches(16)
     var matchLayer = svg.append("g").attr("class", "match-layer")
     drawRound16(0, "Group Stage Match #1", grpMatch1, matchLayer);
@@ -326,5 +303,5 @@ function ready(error, flags){
     .style("text-anchor", "middle")
     .text("GERMANY")
 
-    populateDetails(grpMatch1[0], 0, generateTimeline(40))
+    // populateDetails(grpMatch1[0], 0, generateTimeline(40))
 }
