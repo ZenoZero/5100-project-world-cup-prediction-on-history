@@ -8,9 +8,18 @@ var FLAG_WIDTH = 25;
 var DETAILS_FLAG_WIDTH = 100;
 var TIMELINE_BAR_WIDTH = 15;
 var FIRST_MATCH = false;
-var flagData, grpMatches, historicalMatches;
+var COMPETITIVE_WEIGHT = 1;
+var FRIENDLY_WEIGHT = 1;
+var SPECIAL_NATIONS = {"Saudi Arabia": "ksa", Spain: "esp", Japan: "jpn", Iran: "irn", Morocco: "mar", Iceland: "isl", Nigeria: "nga", "Costa Rica": "crc", "Switzerland": "sui", "Serbia": "srb"}
+var flagData, grpMatches, groupings, historicalMatches;
 
-
+function getNationSHORT(name) {
+    if (SPECIAL_NATIONS[name] == null) {
+        return name.slice(0,3).toLowerCase()
+    } else {
+        return SPECIAL_NATIONS[name]
+    }
+}
 function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
 
     var numberOfMatches = matchesData.length;
@@ -20,13 +29,35 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("class", "round")
     .attr("transform", "translate(0," + roundHeight + ")")
     
-    var roundHeader = round.append("text")
-    .attr("class", "round-header")
-    .attr("x", SVG_WIDTH/2)
-    .attr("y", 5)
-    .style("text-anchor", "middle")
-    .style("alighment-basline", "middle")
-    .text(roundHeading)
+    if (roundHeading == "Finals") {
+        var roundHeader = round.append("text")
+        .attr("class", "round-header")
+        .attr("x", SVG_WIDTH/4)
+        .attr("y", 5)
+        .style("text-anchor", "middle")
+        .style("alighment-basline", "middle")
+        .text("Third Place")
+
+        var roundHeader = round.append("text")
+        .attr("class", "round-header")
+        .attr("x", SVG_WIDTH/4*3)
+        .attr("y", 5)
+        .style("text-anchor", "middle")
+        .style("alighment-basline", "middle")
+        .text(roundHeading)
+
+    } else {
+        var roundHeader = round.append("text")
+        .attr("class", "round-header")
+        .attr("x", SVG_WIDTH/2)
+        .attr("y", 5)
+        .style("text-anchor", "middle")
+        .style("alighment-basline", "middle")
+        .text(roundHeading)
+    }
+    
+
+    
 
     var matches = round.append("g").attr("class", "matches")
     .attr("transform", "translate(0, 20)")
@@ -41,7 +72,7 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("transform", "translate(" + (matchWidth/2-30) + ",0)")
     .attr("width", 60)
     .attr("height", 60)
-    .attr("stroke", "E4C484")
+    .style("opacity", 0.7)
     .style("fill", function() {
         if (FIRST_MATCH) {
             FIRST_MATCH = false;
@@ -49,11 +80,10 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
         } else {
             return "#103673"
         }})
-    .style("opacity", 0.7)
-    .on("click", function(d) {
+    .on("click", function(match) {
         d3.selectAll(".match-rect").style("fill", "#103673")
         d3.select(this).style("fill", "#E4C484")
-        populateDetails(d)
+        populateDetails(match)
     });
 
 
@@ -61,20 +91,20 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
         var team = match.append("g").attr("class", side + "-team")
         .attr("transform", "translate(" + (matchWidth/2-25-TEAM_SPACING) + ", 5)")
 
-        team.append("rect")
+        var matchBg = team.append("rect")
         .attr("class", "flag")
         .attr("x", 0)
         .attr("y", 0)
         .attr("width", 25)
         .attr("height", 15)
-        .attr("fill", (d) => "url(#countryName" + randomScore() + ")")
+        .attr("fill", (d) => "url(#countryName-" + getNationSHORT(d[side].name) + ")")
         
         var teamLabel = team.append("text")
         .attr("class", "team-label")
         .attr("x", 12.5)
         .attr("y", 30)
         .style("text-anchor", "middle")
-        .text((d) => d[side].name.slice(0,3).toUpperCase())
+        .text((d) => getNationSHORT(d[side].name).toUpperCase())
     
         var goalLabel = team.append("text")
         .attr("class", "goal-label")
@@ -128,7 +158,7 @@ function populateDetails(selectedMatch) {
         .attr("y", 0)
         .attr("width", DETAILS_FLAG_WIDTH)
         .attr("height", DETAILS_FLAG_WIDTH * 0.6)
-        .attr("fill", "url(#countryNameBigger" + selectedMatch[side]+randomScore() + ")")
+        .attr("fill", "url(#countryNameBigger-" + getNationSHORT(selectedMatch[side].name) + ")")
         .attr("transform", "translate(0, 70)")
         
         var teamLabel = team.append("text")
@@ -220,8 +250,6 @@ function populateDetails(selectedMatch) {
             }
         }
 
-        console.log(detailsMatches)
-
         detailsMatches.sort((x, y) => d3.ascending(x.date, y.date))
 
         var timeline = details.append("g").attr("class", "details-timeline")
@@ -298,31 +326,12 @@ function populateDetails(selectedMatch) {
     }
 }
 
-// Dummy Data Generation
-var randomScore = () => Math.floor(Math.random() * 10);
-
-// Dummy Data Generation
-var randomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-var generateTimeline = function (size) {
-    dummyData = []
-    for(var i = 0; i < size; i++) {
-        dummyData.push({
-            home: {score: randomScore()}, 
-            away: {score: randomScore()},
-            date: randomDate(new Date(1928, 1, 1), new Date())
-        });
-    }
-    return dummyData;
-}
-
 var controls = d3.select("#controls")
 d3.select("#tournament").style("width", SVG_WIDTH)
 d3.select("#trophy").style("width", SVG_WIDTH)
 d3.select("#credits").style("width", SVG_WIDTH)
 
-var svg = d3.select("#tournament").append("svg")
-.attr("width", SVG_WIDTH)
-.attr("height",  SVG_HEIGHT)
+
 
 d3.queue()
 .defer(d3.csv, "./data/countries_flag_links.csv")
@@ -362,8 +371,6 @@ function matchPrediction(homeTeam, awayTeam, homeAwayHistory) {
         }
     }
 
-    var COMPETITIVE_WEIGHT = 1;
-    var FRIENDLY_WEIGHT = 1;
     var safeMean = (d) => d.length > 0 ? d3.mean(d) : 0
     var weightedGoals = (goals) => Math.round(COMPETITIVE_WEIGHT * safeMean(goals.Competitive) + FRIENDLY_WEIGHT * safeMean(goals.Friendly))
     var prediction = {
@@ -508,21 +515,21 @@ function worldCupPrediction(homeAwayHistory, grpMatches, grps) {
     return matchPredictions
 }
 
-function ready(error, flags, grps, grpMatches2018, history) {
+function populateTournament() {
 
-    flagData = flags;
-    grpMatches = grpMatches2018;
-    historicalMatches = history;
+    d3.select("#tournament").selectAll("*").remove();
+    d3.select("#details").selectAll("*").remove();
 
-    var matchPredictions = worldCupPrediction(historicalMatches, grpMatches, grps);
+    var svg = d3.select("#tournament").append("svg")
+    .attr("width", SVG_WIDTH)
+    .attr("height",  SVG_HEIGHT)
 
     var defs = svg.append("defs");
-    flagLinks = flags;
-    flagLinks.forEach(function (flag, idx) {
+    flagData.forEach(function (flag, idx) {
         defs.append("pattern")
         .attr("width", "100%")
         .attr("height", "100%")
-        .attr("id", "countryName" + idx)
+        .attr("id", "countryName-" + flag.url.slice(-3))
         .attr("patternUnits", "userSpaceOnUse")
         .append("image")
         .attr("width", 25)
@@ -532,7 +539,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
         defs.append("pattern")
         .attr("width", "100%")
         .attr("height", "100%")
-        .attr("id", "countryNameBigger" + idx)
+        .attr("id", "countryNameBigger-" + flag.url.slice(-3))
         .attr("patternUnits", "userSpaceOnUse")
         .append("image")
         .attr("width", DETAILS_FLAG_WIDTH)
@@ -540,18 +547,20 @@ function ready(error, flags, grps, grpMatches2018, history) {
         .attr("xlink:href", flag.url)
     })
 
+    var matchPredictions = worldCupPrediction(historicalMatches, grpMatches, groupings);
+
     var matchLayer = svg.append("g").attr("class", "match-layer")
     drawRound16("Group Stage Match #1", matchPredictions.slice(0, 16), matchLayer, 40);
     drawRound16("Group Stage Match #2", matchPredictions.slice(16, 32), matchLayer, 140);
     drawRound16("Group Stage Match #3", matchPredictions.slice(32, 48), matchLayer, 240);
-    drawRound16("Round of 16", matchPredictions.slice(48, 56), matchLayer, 360);
-    drawRound16("Quarter Finals", matchPredictions.slice(56, 60), matchLayer, 480);
-    drawRound16("Semi Finals", matchPredictions.slice(60, 62), matchLayer, 600);
-    drawRound16("Finals", matchPredictions.slice(62, 64), matchLayer, 720);
+    drawRound16("Round of 16", matchPredictions.slice(48, 56), matchLayer, 340);
+    drawRound16("Quarter Finals", matchPredictions.slice(56, 60), matchLayer, 440);
+    drawRound16("Semi Finals", matchPredictions.slice(60, 62), matchLayer, 540);
+    drawRound16("Finals", matchPredictions.slice(62, 64), matchLayer, 660);
 
     var championRound = matchLayer.append("g")
     .attr("class", "round")
-    .attr("transform", "translate(0," + (7 * ROUND_HEIGHT - 150) + ")")
+    .attr("transform", "translate(0," + (7 * ROUND_HEIGHT-140) + ")")
 
     var trophy = championRound
     .append("image")
@@ -574,7 +583,28 @@ function ready(error, flags, grps, grpMatches2018, history) {
     .attr("class", "round-header")
     .attr("x", SVG_WIDTH/2)
     .attr("y", 170)
-    .style("font-size", "16px")
+    .style("font-size", "18px")
     .style("text-anchor", "middle")
     .text(matchPredictions[63].winner)
+}
+
+function ready(error, flags, grps, grpMatches2018, history) {
+
+    flagData = flags;
+    grpMatches = grpMatches2018;
+    historicalMatches = history;
+    groupings = grps;
+
+    populateTournament();
+}
+
+function toggleMatchType(matchType) {
+    var off = document.getElementById(matchType).classList.toggle('off')
+    if (matchType == "competitive") {
+        COMPETITIVE_WEIGHT = off ? 0 : 1
+    } else {
+        FRIENDLY_WEIGHT = off ? 0 : 1
+    }
+    console.log(FRIENDLY_WEIGHT, COMPETITIVE_WEIGHT)
+    populateTournament();
 }
