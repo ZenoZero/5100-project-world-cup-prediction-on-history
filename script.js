@@ -7,7 +7,6 @@ var ROUND_HEIGHT = 120;
 var FLAG_WIDTH = 25;
 var DETAILS_FLAG_WIDTH = 100;
 var TIMELINE_BAR_WIDTH = 15;
-var FIRST_MATCH = false;
 var COMPETITIVE_WEIGHT = 1;
 var FRIENDLY_WEIGHT = 1;
 var SPECIAL_NATIONS = {"Saudi Arabia": "ksa", Spain: "esp", Japan: "jpn", Iran: "irn", Morocco: "mar", Iceland: "isl", Nigeria: "nga", "Costa Rica": "crc", "Switzerland": "sui", "Serbia": "srb"}
@@ -20,6 +19,7 @@ function getNationSHORT(name) {
         return SPECIAL_NATIONS[name]
     }
 }
+
 function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
 
     var numberOfMatches = matchesData.length;
@@ -45,7 +45,6 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
         .style("text-anchor", "middle")
         .style("alighment-basline", "middle")
         .text(roundHeading)
-
     } else {
         var roundHeader = round.append("text")
         .attr("class", "round-header")
@@ -56,9 +55,6 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
         .text(roundHeading)
     }
     
-
-    
-
     var matches = round.append("g").attr("class", "matches")
     .attr("transform", "translate(0, 20)")
 
@@ -73,9 +69,8 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("width", 60)
     .attr("height", 60)
     .style("opacity", 0.7)
-    .style("fill", function() {
-        if (FIRST_MATCH) {
-            FIRST_MATCH = false;
+    .style("fill", function(d, idx) {
+        if (roundHeading == "Finals" && idx == 1){
             return "#E4C484"
         } else {
             return "#103673"
@@ -326,12 +321,8 @@ function populateDetails(selectedMatch) {
     }
 }
 
-var controls = d3.select("#controls")
 d3.select("#tournament").style("width", SVG_WIDTH)
-d3.select("#trophy").style("width", SVG_WIDTH)
 d3.select("#credits").style("width", SVG_WIDTH)
-
-
 
 d3.queue()
 .defer(d3.csv, "./data/countries_flag_links.csv")
@@ -557,6 +548,8 @@ function populateTournament() {
     drawRound16("Quarter Finals", matchPredictions.slice(56, 60), matchLayer, 440);
     drawRound16("Semi Finals", matchPredictions.slice(60, 62), matchLayer, 540);
     drawRound16("Finals", matchPredictions.slice(62, 64), matchLayer, 660);
+
+    populateDetails(matchPredictions[63])
 
     var championRound = matchLayer.append("g")
     .attr("class", "round")
