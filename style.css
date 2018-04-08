@@ -27,8 +27,7 @@ h1 {
     text-anchor: middle;
     text-align: left;
     padding: 20px 0 0;
-    margin-bottom: 0;
-
+    margin-bottom: 10px;
 }
 a {
     color: #E4C484;
@@ -55,7 +54,7 @@ svg text {
 #details {
     float: left;
     background: linear-gradient(180deg, rgba(255, 61, 61, 0.438) 0%, rgba(22, 0, 6, 0.404) 20%), url("./images/wc-2018-bg-red.jpg");
-    box-shadow: #031429,20;
+    box-shadow: #031429, 20;
 }
 #details svg {
     margin-bottom: 40px;
@@ -82,5 +81,37 @@ svg text {
 #credits {
     text-align: center; 
     font-size: 12px;
-    margin-bottom: 40px;
+    margin: 40px 0;
+}
+
+#controls {
+    font-size: 16px;
+}
+.select-style {
+    width: 120px;
+    border-radius: 0;
+    overflow: hidden;
+    display: inline-block;
+    padding: 0;
+    opacity: 0.9;
+    margin-bottom: -5px;
+    margin-left: -5px;
+}
+
+.select-style select {
+    font-family: "Open Sans";
+    font-size: 16px;
+    color: #E4C484;
+    text-decoration: underline;
+    padding: 0 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
 }

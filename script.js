@@ -1,4 +1,4 @@
-var SVG_HEIGHT = 950;
+var SVG_HEIGHT = 870;
 var SVG_WIDTH = 1100;
 var DETAILS_WIDTH = 280;
 var TEAM_SPACING = 2;
@@ -9,6 +9,7 @@ var DETAILS_FLAG_WIDTH = 100;
 var TIMELINE_BAR_WIDTH = 15;
 var COMPETITIVE_WEIGHT = 1;
 var FRIENDLY_WEIGHT = 1;
+var GOLD_COLOR = "#E4C484";
 var SPECIAL_NATIONS = {"Saudi Arabia": "ksa", Spain: "esp", Japan: "jpn", Iran: "irn", Morocco: "mar", Iceland: "isl", Nigeria: "nga", "Costa Rica": "crc", "Switzerland": "sui", "Serbia": "srb"}
 var flagData, grpMatches, groupings, historicalMatches;
 
@@ -20,7 +21,7 @@ function getNationSHORT(name) {
     }
 }
 
-function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
+function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
 
     var numberOfMatches = matchesData.length;
     var matchWidth = SVG_WIDTH / numberOfMatches;
@@ -68,22 +69,24 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("transform", "translate(" + (matchWidth/2-30) + ",0)")
     .attr("width", 60)
     .attr("height", 60)
+    .style("stroke", "black")
+    .style("stroke-width", 0.3)
     .style("opacity", 0.7)
     .style("fill", function(d, idx) {
         if (roundHeading == "Finals" && idx == 1){
-            return "#E4C484"
+            return GOLD_COLOR
         } else {
             return "#103673"
         }})
     .on("click", function(match) {
         d3.selectAll(".match-rect").style("fill", "#103673")
-        d3.select(this).style("fill", "#E4C484")
+        d3.select(this).style("fill", GOLD_COLOR)
         populateDetails(match)
     });
 
 
     ['home', 'away'].forEach(function (side) {
-        var team = match.append("g").attr("class", side + "-team")
+        var team = match.append("g").attr("class", (d) => "team " + side + "-team team-" + getNationSHORT(d[side].name))
         .attr("transform", "translate(" + (matchWidth/2-25-TEAM_SPACING) + ", 5)")
 
         var matchBg = team.append("rect")
@@ -95,14 +98,14 @@ function drawRound16(roundHeading, matchesData, matchLayer, roundHeight) {
         .attr("fill", (d) => "url(#countryName-" + getNationSHORT(d[side].name) + ")")
         
         var teamLabel = team.append("text")
-        .attr("class", "team-label")
+        .attr("class", (d) => "team-label team-" + getNationSHORT(d[side].name))
         .attr("x", 12.5)
         .attr("y", 30)
         .style("text-anchor", "middle")
         .text((d) => getNationSHORT(d[side].name).toUpperCase())
     
         var goalLabel = team.append("text")
-        .attr("class", "goal-label")
+        .attr("class", (d) => "goal-label team-" + getNationSHORT(d[side].name))
         .attr("x", 12.5)
         .attr("y", 47.5)
         .style("text-anchor", "middle")
@@ -267,7 +270,7 @@ function populateDetails(selectedMatch) {
             timelineMatch.append("line")
             .attr("class", "timeline-home-score timeline-" + idx)
             .style("stroke-width", TIMELINE_BAR_WIDTH)
-            .attr("stroke", "#E4C484" )
+            .attr("stroke", GOLD_COLOR)
             .attr("opacity", 0.7)
             .attr("x1", xScale(0)-15)
             .attr("x2", xScale(-d.home.score)-15)
@@ -280,7 +283,7 @@ function populateDetails(selectedMatch) {
             timelineMatch.append("line")
             .attr("class", "timeline-away-score timeline-" + idx)
             .style("stroke-width", TIMELINE_BAR_WIDTH)
-            .attr("stroke", "#E4C484" )
+            .attr("stroke", GOLD_COLOR)
             .attr("opacity", 0.7)
             .attr("x1", xScale(0)+15)
             .attr("x2", xScale(d.away.score)+15)
@@ -510,6 +513,7 @@ function populateTournament() {
 
     d3.select("#tournament").selectAll("*").remove();
     d3.select("#details").selectAll("*").remove();
+    d3.select('.highlight-select').property('value', '- Select Team -');
 
     var svg = d3.select("#tournament").append("svg")
     .attr("width", SVG_WIDTH)
@@ -539,21 +543,112 @@ function populateTournament() {
     })
 
     var matchPredictions = worldCupPrediction(historicalMatches, grpMatches, groupings);
+    
+    var linkLayer = svg.append("g").attr("class", "link-layer")
+    linkLayer.attr("transform", "translate(0,10)")
+
+    var nextMatchID = function(name, currentMatchID) {
+        for(var i = currentMatchID+1; i < matchPredictions.length; i++) {
+            if (matchPredictions[i].home.name == name || matchPredictions[i].away.name == name ) {
+                return i;
+            }
+        }
+    }
+    var getMatchWidth = function (matchID) {
+        if (matchID < 16) {
+            return matchID * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2
+        } else if (matchID < 32) {
+            return (matchID-16) * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2
+        } else if (matchID < 48) {
+            return (matchID-32) * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2
+        } else if (matchID < 56) {
+            return (matchID-48) * (SVG_WIDTH/8) + (SVG_WIDTH/8)/2
+        } else if (matchID < 60) {
+            return (matchID-56) * (SVG_WIDTH/4) + (SVG_WIDTH/4)/2
+        } else if (matchID < 62) {
+            return (matchID-60) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2
+        } else {
+            return (matchID-62) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2
+        }
+    }
+    var getRoundNum = function (matchID) {
+        if (matchID < 16) {
+            return 0
+        } else if (matchID < 32) {
+            return 1
+        } else if (matchID < 48) {
+            return 2
+        } else if (matchID < 56) {
+            return 3
+        } else if (matchID < 60) {
+            return 4
+        } else if (matchID < 62) {
+            return 5
+        } else {
+            return 6
+        }
+    }
+
+    matchPredictions.forEach(function(match, idx) {
+
+        var xHome = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(idx)
+        var xAway = 12.5 + (TEAM_SPACING) + getMatchWidth(idx)
+        var y1 = 20 + 60 + 100 * getRoundNum(idx);
+        var y2 = y1 + 40;
+
+        if (nextMatchID(match.home.name, idx) != null) {
+            var nextMatch = matchPredictions[nextMatchID(match.home.name, idx)]
+            if (match.home.name == nextMatch.home.name) {
+                var x2 = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(nextMatchID(match.home.name, idx))
+            } else {
+                var x2 = 12.5 + (TEAM_SPACING) + getMatchWidth(nextMatchID(match.home.name, idx))
+            }
+            linkLayer.append("line")
+            .attr("class", "link team team-" + getNationSHORT(match.home.name))
+            .attr("x1", xHome)
+            .attr("y1", y1)
+            .attr("x2", x2)
+            .attr("y2", y2)
+            .style("stroke", GOLD_COLOR)
+            .style("stroke-width", 1)
+            .style("opacity", 0.7)
+        }
+
+        if (nextMatchID(match.away.name, idx) != null) {
+            var nextMatch = matchPredictions[nextMatchID(match.away.name, idx)]
+            if (match.away.name == nextMatch.home.name) {
+                var x2 = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx))
+            } else {
+                var x2 = 12.5 + (TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx))
+            }
+            linkLayer.append("line")
+            .attr("class", "link team team-" + getNationSHORT(match.away.name))
+            .attr("x1", xAway)
+            .attr("y1", y1)
+            .attr("x2", x2)
+            .attr("y2", y2)
+            .style("stroke", GOLD_COLOR)
+            .style("stroke-width", 1)
+            .style("opacity", 0.7)
+        }
+    })
 
     var matchLayer = svg.append("g").attr("class", "match-layer")
-    drawRound16("Group Stage Match #1", matchPredictions.slice(0, 16), matchLayer, 40);
-    drawRound16("Group Stage Match #2", matchPredictions.slice(16, 32), matchLayer, 140);
-    drawRound16("Group Stage Match #3", matchPredictions.slice(32, 48), matchLayer, 240);
-    drawRound16("Round of 16", matchPredictions.slice(48, 56), matchLayer, 340);
-    drawRound16("Quarter Finals", matchPredictions.slice(56, 60), matchLayer, 440);
-    drawRound16("Semi Finals", matchPredictions.slice(60, 62), matchLayer, 540);
-    drawRound16("Finals", matchPredictions.slice(62, 64), matchLayer, 660);
+    matchLayer.attr("transform", "translate(0,10)")
+
+    drawRound("Group Stage Match #1", matchPredictions.slice(0, 16), matchLayer, 0);
+    drawRound("Group Stage Match #2", matchPredictions.slice(16, 32), matchLayer, 100);
+    drawRound("Group Stage Match #3", matchPredictions.slice(32, 48), matchLayer, 200);
+    drawRound("Round of 16", matchPredictions.slice(48, 56), matchLayer, 300);
+    drawRound("Quarter Finals", matchPredictions.slice(56, 60), matchLayer, 400);
+    drawRound("Semi Finals", matchPredictions.slice(60, 62), matchLayer, 500);
+    drawRound("Finals", matchPredictions.slice(62, 64), matchLayer, 600);
 
     populateDetails(matchPredictions[63])
 
     var championRound = matchLayer.append("g")
     .attr("class", "round")
-    .attr("transform", "translate(0," + (7 * ROUND_HEIGHT-140) + ")")
+    .attr("transform", "translate(0," + (5 * ROUND_HEIGHT + 50) + ")")
 
     var trophy = championRound
     .append("image")
@@ -587,6 +682,31 @@ function ready(error, flags, grps, grpMatches2018, history) {
     grpMatches = grpMatches2018;
     historicalMatches = history;
     groupings = grps;
+
+    var teams = grps.map((d) => d.Team);
+    teams.push("- Select Team -")
+    teams.sort((x, y) => d3.ascending(x, y))
+    
+    var highlight = d3.select("#controls")
+    .append("div").attr("class", "select-style")
+    .append("select").attr("class", "highlight-select")
+
+    highlight.on("change", function(d) {
+        var value = d3.select(this).property("value");
+        if (value == "- Select Team -") {
+            d3.selectAll(".team").style("opacity", 1)
+        } else {
+            d3.selectAll(".team").style("opacity", 0.4)
+            d3.selectAll(".team-" + getNationSHORT(value)).style("opacity", 1)
+        }
+    });
+
+    highlight.selectAll("option")
+    .data(teams)
+    .enter()
+    .append("option")
+    .attr("value", (d) => d)
+    .text((d) => d);
 
     populateTournament();
 }
