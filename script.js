@@ -139,13 +139,13 @@ function populateDetails(selectedMatch) {
     .attr("width", DETAILS_WIDTH/2)
     .attr("x" ,140-DETAILS_WIDTH/4)
     .attr("y", 0)
-    .attr("xlink:href", "./images/detail_match_header.svg");
+    .attr("xlink:href", "./images/detail-match-header.svg");
 
     var soccerField = detailsHeader
     .append("image")
     .attr("width", DETAILS_WIDTH)
     .attr("y", 185)
-    .attr("xlink:href", "./images/football_field.svg");
+    .attr("xlink:href", "./images/football-field.svg");
 
     ['home', 'away'].forEach(function (side) {
         var team = detailsHeader.append("g").attr("class", side + "-team")

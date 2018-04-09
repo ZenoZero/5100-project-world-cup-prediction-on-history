@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'dusha_plusregular';
-    src: url('dusha-regular.woff'), url('dusha-regular.woff') format('woff');
+    src: url('./font/dusha-regular.woff'), url('./font/dusha-regular.woff') format('woff');
 }
 body {
     font-family: "Open Sans";
