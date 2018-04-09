@@ -2,9 +2,6 @@
     font-family: 'dusha_plusregular';
     src: url('dusha-regular.woff'), url('dusha-regular.woff') format('woff');
 }
-control {
-    font-family: 'dusha_plusregular';
-}
 body {
     font-family: "Open Sans";
     margin: 0 auto;
@@ -44,20 +41,25 @@ a.off {
 }
 svg text {
     fill: white;
+    font-family: 'dusha_plusregular'; 
 }
 #tournament {
     font-family: 'dusha_plusregular';   
     font-size: 12px;
     float: left;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 #details {
     float: left;
     background: linear-gradient(180deg, rgba(255, 61, 61, 0.438) 0%, rgba(22, 0, 6, 0.404) 20%), url("./images/wc-2018-bg-red.jpg");
     box-shadow: #031429, 20;
 }
-#details svg {
-    margin-bottom: 40px;
+.score {
+    font-family: 'dusha_plusregular';
+    font-size: 11px;
+}
+.timeline-header {
+    font-family: 'dusha_plusregular';
 }
 .team-label {
     font-family: 'dusha_plusregular'; 
@@ -67,7 +69,7 @@ svg text {
     font-family: 'dusha_plusregular'; 
     font-size: 16px;
 }
-.match-rect:hover {
+.match-rect:hover, .timeline-rect:hover {
     cursor: pointer;
 }
 .match-rect.selected {
