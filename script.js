@@ -1,7 +1,7 @@
 var SVG_HEIGHT = 870;
 var SVG_WIDTH = 1100;
 var DETAILS_WIDTH = 290;
-var DETAILS_HEIGHT = 840;
+var DETAILS_HEIGHT = 866;
 var TEAM_SPACING = 2;
 var DETAILS_TEAM_SPACING = 5;
 var ROUND_HEIGHT = 120;
@@ -583,6 +583,7 @@ function populateTournament() {
 
     var matchPredictions = worldCupPrediction(historicalMatches, grpMatches, groupings);
     
+    // Draw progression links
     var linkLayer = svg.append("g").attr("class", "link-layer")
     linkLayer.attr("transform", "translate(0,10)")
 
@@ -634,23 +635,25 @@ function populateTournament() {
         var xAway = 12.5 + (TEAM_SPACING) + getMatchWidth(idx)
         var y1 = 20 + 60 + 100 * getRoundNum(idx);
         var y2 = y1 + 40;
+        var generatePath = function(x1, x2, y1, y2) {
+            var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2
+            return ["M", x1, y1, "Q", x1, y1+10, pivotX, y1+20, x2, y1+30, x2, y2].join(" ")
+        }
 
         if (nextMatchID(match.home.name, idx) != null) {
             var nextMatch = matchPredictions[nextMatchID(match.home.name, idx)]
             if (match.home.name == nextMatch.home.name) {
-                var x2 = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(nextMatchID(match.home.name, idx))
+                var x2 = 12.5 - 25 - TEAM_SPACING + getMatchWidth(nextMatchID(match.home.name, idx))
             } else {
-                var x2 = 12.5 + (TEAM_SPACING) + getMatchWidth(nextMatchID(match.home.name, idx))
+                var x2 = 12.5 + TEAM_SPACING + getMatchWidth(nextMatchID(match.home.name, idx))
             }
-            linkLayer.append("line")
+            linkLayer.append("path")
             .attr("class", "link team team-" + getNationSHORT(match.home.name))
-            .attr("x1", xHome)
-            .attr("y1", y1)
-            .attr("x2", x2)
-            .attr("y2", y2)
+            .attr("fill", "none")
             .style("stroke", GOLD_COLOR)
             .style("stroke-width", 1)
-            .style("opacity", 0.7)
+            .style("opacity", 0.6)
+            .attr("d", generatePath(xHome, x2, y1, y2))
         }
 
         if (nextMatchID(match.away.name, idx) != null) {
@@ -660,16 +663,33 @@ function populateTournament() {
             } else {
                 var x2 = 12.5 + (TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx))
             }
-            linkLayer.append("line")
+
+            linkLayer.append("path")
             .attr("class", "link team team-" + getNationSHORT(match.away.name))
-            .attr("x1", xAway)
-            .attr("y1", y1)
-            .attr("x2", x2)
-            .attr("y2", y2)
+            .attr("fill", "none")
             .style("stroke", GOLD_COLOR)
             .style("stroke-width", 1)
-            .style("opacity", 0.7)
+            .style("opacity", 0.6)
+            .attr("d", generatePath(xAway, x2, y1, y2))
         }
+
+        if (idx == 63) {
+            var winner = (match.winner == match.home.name) ? match.home : match.away
+            var x1 = (match.winner == match.home.name) ? xHome : xAway
+            var generatePath = function(x1, x2, y1, y2) {
+                var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2
+                var pivotY = y1 < y2 ? y1 + (y2 - y1)/2 : y1 - (y1 - y2)/2
+                return ["M", x1, y1, "Q", x1, y1+30, pivotX, pivotY, x2, y2-30, x2, y2+15].join(" ")
+            }
+            linkLayer.append("path")
+            .attr("class", "link team team-" + getNationSHORT(winner.name))
+            .attr("fill", "none")
+            .style("stroke", GOLD_COLOR)
+            .style("stroke-width", 1)
+            .style("opacity", 0.6)
+            .attr("d", generatePath(x1, SVG_WIDTH/2, y1, 5 * ROUND_HEIGHT + 50))
+        }
+
     })
 
     var matchLayer = svg.append("g").attr("class", "match-layer")

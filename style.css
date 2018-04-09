@@ -38,6 +38,7 @@ a.off {
 .round-header {
     fill: #E4C484;
     font-size: 14px;
+    text-shadow: 2px 4px 10px black;
 }
 svg text {
     fill: white;
