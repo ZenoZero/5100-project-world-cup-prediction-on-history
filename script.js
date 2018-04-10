@@ -801,7 +801,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
         if (value == "- Select Team -") {
             d3.selectAll(".team").style("opacity", 1)
         } else {
-            d3.selectAll(".team").style("opacity", 0.4)
+            d3.selectAll(".team").style("opacity", 0.2)
             d3.selectAll(".team-" + getNationSHORT(value)).style("opacity", 1)
         }
     });
