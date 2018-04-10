@@ -252,114 +252,141 @@ function populateDetails(selectedMatch) {
 
         detailsMatches.sort((x, y) => d3.ascending(x.date, y.date))
 
-        details.append("text")
-        .attr("class", "timeline-header")
-        .attr("x", 15)
-        .attr("y", 278)
-        .attr("text-anchor", "start")
-        .text("Head to Head")
-        .style("fill", GOLD_COLOR)
-        
-        var timeline = details.append("g").attr("class", "details-timeline")
-        .attr("transform", "translate(" + 0 + "," +  295 + ")")
+        // Only show max 32 matches
+        if (detailsMatches.length > 32) {
+            detailsMatches = detailsMatches.slice(detailsMatches.length-32, detailsMatches.length)
+        }
 
-        timeline.append("rect")
-        .attr("class", "timeline-rect")
-        .attr("width", DETAILS_WIDTH)
-        .attr("height", (detailsMatches.length+2) * TIMELINE_BAR_WIDTH)
-        .style("opacity", 0);
+        // Hide matches
+        if (COMPETITIVE_WEIGHT == 0) {
+            detailsMatches = detailsMatches.filter(match => match.tournament != "Competitive")
+        }
+        if (FRIENDLY_WEIGHT == 0) {
+            detailsMatches = detailsMatches.filter(match => match.tournament != "Friendly")
+        }
 
-        var xScale = d3.scaleLinear().domain([0, 9]).range([DETAILS_WIDTH/2, DETAILS_WIDTH-50]);
-        var trophy = (tournament) => tournament == "Friendly" ? "🤝" : "🏆"
-        var footballs = function (score) {
-            var balls = ""
-            for (var i = 0; i < score; i++) balls += "⚽";
-            return balls;
-        } 
-        
-        detailsMatches.forEach(function (d, idx) {
-            var timelineMatch = timeline.append("g")
-            .attr("class", "timeline-match")
-            .attr("transform", "translate(0," + (idx*(TIMELINE_BAR_WIDTH + 5))+ ")")
+        if (detailsMatches.length != 0) {
 
-            // timelineMatch.append("line")
-            // .attr("class", "timeline-home-score timeline-" + idx)
-            // .style("stroke-width", TIMELINE_BAR_WIDTH)
-            // .attr("stroke", GOLD_COLOR)
-            // .attr("opacity", 0.7)
-            // .attr("x1", xScale(0)-20)
-            // .attr("x2", xScale(-d.home.score)-20)
-            // .attr("y1", 0)
-            // .attr("y2", 0)
-
-            // timelineMatch.append("line")
-            // .attr("class", "timeline-away-score timeline-" + idx)
-            // .style("stroke-width", TIMELINE_BAR_WIDTH)
-            // .attr("stroke", GOLD_COLOR)
-            // .attr("opacity", 0.7)
-            // .attr("x1", xScale(0)+20)
-            // .attr("x2", xScale(d.away.score)+20)
-            // .attr("y1", 0)
-            // .attr("y2", 0)
-
-            timelineMatch.append("text")
-            .attr("class", "score timeline-score-" + idx)
-            .attr("x", xScale(0)-15)
-            .attr("y", 2)
-            .style("text-anchor", "end")
-            .attr("alignment-baseline", "middle")
-            .text(footballs(d.home.score))
-
-            timelineMatch.append("text")
-            .attr("class", "score timeline-score-" + idx)
-            .attr("x", xScale(0)+15)
-            .attr("y", 2)
-            .style("text-anchor", "staart")
-            .attr("alignment-baseline", "middle")
-            .text(footballs(d.away.score))
-
-            timelineMatch.append("text")
-            .attr("class", "score timeline-score-" + idx)
-            .attr("x", DETAILS_WIDTH/2)
-            .attr("y", 1)
-            .style("text-anchor", "middle")
-            .attr("alignment-baseline", "middle")
-            .text(d.home.score + " - " + d.away.score)
-
-            timelineMatch.append("text")
-            .attr("class", "score timeline-date-" + idx)
+            details.append("text")
+            .attr("class", "timeline-header")
             .attr("x", 15)
-            .attr("y", 1)
-            .style("text-anchor", "start")
-            .attr("alignment-baseline", "middle")
-            .text(d.date.slice(2,4) + '\'')
+            .attr("y", 278)
+            .attr("text-anchor", "start")
+            .text("Head to Head")
+            .style("fill", GOLD_COLOR)
+            
+            var timeline = details.append("g").attr("class", "details-timeline")
+            .attr("transform", "translate(" + 0 + "," +  295 + ")")
 
-            timelineMatch.append("text")
-            .attr("class", "score timeline-trophy-" + idx)
-            .attr("x", DETAILS_WIDTH-15)
-            .attr("y", 1)
-            .style("text-anchor", "end")
-            .attr("alignment-baseline", "middle")
-            .text(trophy(d.tournament))
-
-            timelineMatch.append("rect")
-            .attr("class", "timeline-rect timeline-rect-" + idx)
-            .attr("height", TIMELINE_BAR_WIDTH*1.2)
+            timeline.append("rect")
+            .attr("class", "timeline-rect")
             .attr("width", DETAILS_WIDTH)
-            .attr("x", 0)
-            .attr("y", -TIMELINE_BAR_WIDTH*0.6)
-            .attr("fill", GOLD_COLOR)
-            .attr("opacity", 0)
-            .on("mouseover", function() {
-                d3.selectAll(".timeline-rect-"+idx).attr("opacity", 0.2)
-                d3.selectAll(".timeline-"+idx).attr("opacity", 1.0)
-            })
-            .on("mouseout", function() {
-                d3.selectAll(".timeline-rect-"+idx).attr("opacity", 0)
-                d3.selectAll(".timeline-"+idx).attr("opacity", 0.7)
-            })
-        });
+            .attr("height", (detailsMatches.length+2) * TIMELINE_BAR_WIDTH)
+            .style("opacity", 0);
 
+            var xScale = d3.scaleLinear().domain([0, 9]).range([DETAILS_WIDTH/2, DETAILS_WIDTH-50]);
+            var trophy = (tournament) => tournament == "Friendly" ? "🤝" : "🏆"
+            var footballs = function (score) {
+                var balls = ""
+                for (var i = 0; i < score; i++) balls += "⚽";
+                return balls;
+            } 
+            
+            detailsMatches.forEach(function (d, idx) {
+                var timelineMatch = timeline.append("g")
+                .attr("class", "timeline-match")
+                .attr("transform", "translate(0," + (idx*(TIMELINE_BAR_WIDTH + 5))+ ")")
+
+                timelineMatch.append("text")
+                .attr("class", "score timeline-score-" + idx)
+                .attr("x", xScale(0)-15)
+                .attr("y", 2)
+                .style("text-anchor", "end")
+                .attr("alignment-baseline", "middle")
+                .text(footballs(d.home.score))
+
+                timelineMatch.append("text")
+                .attr("class", "score timeline-score-" + idx)
+                .attr("x", xScale(0)+15)
+                .attr("y", 2)
+                .style("text-anchor", "staart")
+                .attr("alignment-baseline", "middle")
+                .text(footballs(d.away.score))
+
+                timelineMatch.append("text")
+                .attr("class", "score timeline-score-" + idx)
+                .attr("x", DETAILS_WIDTH/2)
+                .attr("y", 1)
+                .style("text-anchor", "middle")
+                .attr("alignment-baseline", "middle")
+                .text(d.home.score + " - " + d.away.score)
+
+                timelineMatch.append("text")
+                .attr("class", "score timeline-date-" + idx)
+                .attr("x", 15)
+                .attr("y", 1)
+                .style("text-anchor", "start")
+                .attr("alignment-baseline", "middle")
+                .text(d.date.slice(2,4) + '\'')
+
+                timelineMatch.append("text")
+                .attr("class", "score timeline-trophy-" + idx)
+                .attr("x", DETAILS_WIDTH-15)
+                .attr("y", 1)
+                .style("text-anchor", "end")
+                .attr("alignment-baseline", "middle")
+                .text(trophy(d.tournament))
+
+                timelineMatch.append("rect")
+                .attr("class", "timeline-rect timeline-rect-" + idx)
+                .attr("height", TIMELINE_BAR_WIDTH*1.2)
+                .attr("width", DETAILS_WIDTH)
+                .attr("x", 0)
+                .attr("y", -TIMELINE_BAR_WIDTH*0.6)
+                .attr("fill", GOLD_COLOR)
+                .attr("opacity", 0)
+                .on("mouseover", function() {
+                    d3.selectAll(".timeline-rect-"+idx).attr("opacity", 0.2)
+                    d3.selectAll(".timeline-"+idx).attr("opacity", 1.0)
+                })
+                .on("mouseout", function() {
+                    d3.selectAll(".timeline-rect-"+idx).attr("opacity", 0)
+                    d3.selectAll(".timeline-"+idx).attr("opacity", 0.7)
+                })
+            });
+
+        } else {
+
+            if (COMPETITIVE_WEIGHT == 1) {
+                var msg = " in a competitive match "
+            } else if (FRIENDLY_WEIGHT == 1)  {
+                var msg = " in a friendly match "
+            }
+
+            if (COMPETITIVE_WEIGHT == 1 || FRIENDLY_WEIGHT == 1) {
+                var noHistory = details.append("text")
+                .attr("class", "no-history")
+                .style("font-size", "14px")
+                .style("text-anchor", "middle")
+                
+                noHistory.append("tspan")
+                .attr("x", DETAILS_WIDTH/2)
+                .attr("y", 310)
+                .text("Both team have never met")
+
+                noHistory.append("tspan")
+                .attr("x", DETAILS_WIDTH/2)
+                .attr("y", 325)
+                .text(msg)
+
+                noHistory.append("tspan")
+                .attr("x", DETAILS_WIDTH/2)
+                .attr("y", 340)
+                .text("before in the past 90 years.")
+            }
+        }
+
+        
     }
 }
 
