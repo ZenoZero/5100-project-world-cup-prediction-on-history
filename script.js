@@ -11,6 +11,7 @@ var TIMELINE_BAR_WIDTH = 12;
 var COMPETITIVE_WEIGHT = 1;
 var FRIENDLY_WEIGHT = 1;
 var GOLD_COLOR = "#E4C484";
+var YEARS = 90;
 var SPECIAL_NATIONS = {"Saudi Arabia": "ksa", Spain: "esp", Japan: "jpn", Iran: "irn", Morocco: "mar", Iceland: "isl", Nigeria: "nga", "Costa Rica": "crc", "Switzerland": "sui", "Serbia": "srb"}
 var flagData, grpMatches, groupings, historicalMatches;
 
@@ -196,7 +197,7 @@ function populateDetails(selectedMatch) {
         noHistory.append("tspan")
         .attr("x", DETAILS_WIDTH/2)
         .attr("y", 325)
-        .text("before in the past 90 years.")
+        .text("before in the past " + YEARS + " years.")
 
     } else {
 
@@ -382,7 +383,7 @@ function populateDetails(selectedMatch) {
                 noHistory.append("tspan")
                 .attr("x", DETAILS_WIDTH/2)
                 .attr("y", 340)
-                .text("before in the past 90 years.")
+                .text("before in the past " + YEARS + " years.")
             }
         }
 
@@ -783,8 +784,8 @@ function ready(error, flags, grps, grpMatches2018, history) {
     .text((d) => d + " years");
 
     yearsSelect.on("change", function(d) {
-        var value = Number(d3.select(this).property("value"));
-        historicalMatches = history.filter((match) => Number(match.Date.slice(0,4)) > (2018-value))
+        YEARS = Number(d3.select(this).property("value"));
+        historicalMatches = history.filter((match) => Number(match.Date.slice(0,4)) > (2018-YEARS))
         populateTournament();
     });
 
