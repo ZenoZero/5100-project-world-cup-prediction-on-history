@@ -100,7 +100,6 @@ svg text {
     margin-bottom: -5px;
     margin-left: -5px;
 }
-
 .select-style select {
     font-family: "Open Sans";
     font-size: 16px;
@@ -113,6 +112,14 @@ svg text {
     background: transparent;
     background-image: none;
     -webkit-appearance: none;
+}
+
+.years-style {
+    width: auto;
+    margin-left: 0;
+}
+.years-style select {
+    padding: 0;
 }
 
 .select-style select:focus {

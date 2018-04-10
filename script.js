@@ -769,6 +769,25 @@ function ready(error, flags, grps, grpMatches2018, history) {
     historicalMatches = history;
     groupings = grps;
 
+    var periods = [];
+    for(var i = 90; i >= 10; i -= 10) periods.push(i);
+
+    var yearsSelect = d3.select("#years-control")
+    .append("div").attr("class", "select-style years-style")
+    .append("select").attr("class", "highlight-select")
+
+    yearsSelect.selectAll("option")
+    .data(periods).enter()
+    .append("option")
+    .attr("value", (d) => d)
+    .text((d) => d + " years");
+
+    yearsSelect.on("change", function(d) {
+        var value = Number(d3.select(this).property("value"));
+        historicalMatches = history.filter((match) => Number(match.Date.slice(0,4)) > (2018-value))
+        populateTournament();
+    });
+
     var teams = grps.map((d) => d.Team);
     teams.push("- Select Team -")
     teams.sort((x, y) => d3.ascending(x, y))
@@ -788,8 +807,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
     });
 
     highlight.selectAll("option")
-    .data(teams)
-    .enter()
+    .data(teams).enter()
     .append("option")
     .attr("value", (d) => d)
     .text((d) => d);
