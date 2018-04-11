@@ -15,13 +15,7 @@ var YEARS = 90;
 var SPECIAL_NATIONS = {"Saudi Arabia": "ksa", Spain: "esp", Japan: "jpn", Iran: "irn", Morocco: "mar", Iceland: "isl", Nigeria: "nga", "Costa Rica": "crc", "Switzerland": "sui", "Serbia": "srb"}
 var flagData, grpMatches, groupings, historicalMatches;
 
-function getNationSHORT(name) {
-    if (SPECIAL_NATIONS[name] == null) {
-        return name.slice(0,3).toLowerCase()
-    } else {
-        return SPECIAL_NATIONS[name]
-    }
-}
+var getNationSHORT = (name) => SPECIAL_NATIONS[name] == null ? name.slice(0,3).toLowerCase() : SPECIAL_NATIONS[name]
 
 function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
 
@@ -73,16 +67,11 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("height", 60)
     .style("stroke", "black")
     .style("stroke-width", 0.3)
-    .style("opacity", 0.7)
-    .style("fill", function(d, idx) {
-        if (roundHeading == "Finals" && idx == 1){
-            return GOLD_COLOR
-        } else {
-            return "#103673"
-        }})
+    .style("opacity", (d, idx) => (roundHeading == "Finals" && idx == 1) ? 0.7 : 0.1)
+    .style("fill", (d, idx) => (roundHeading == "Finals" && idx == 1) ? GOLD_COLOR : "white")
     .on("click", function(match) {
-        d3.selectAll(".match-rect").style("fill", "#103673")
-        d3.select(this).style("fill", GOLD_COLOR)
+        d3.selectAll(".match-rect").style("fill", "white").style("opacity", 0.1)
+        d3.select(this).style("fill", GOLD_COLOR).style("opacity", 0.7)
         populateDetails(match)
     });
 
