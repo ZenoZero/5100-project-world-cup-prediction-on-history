@@ -290,6 +290,7 @@ function populateDetails(selectedMatch) {
             var footballs = function (score) {
                 var balls = ""
                 for (var i = 0; i < score; i++) balls += "⚽";
+                if (score > 6) balls = balls.slice(0,5) + " .. " + "⚽";
                 return balls;
             } 
             
@@ -297,6 +298,22 @@ function populateDetails(selectedMatch) {
                 var timelineMatch = timeline.append("g")
                 .attr("class", "timeline-match")
                 .attr("transform", "translate(0," + (idx*(TIMELINE_BAR_WIDTH + 5))+ ")")
+                
+                timelineMatch.append("text")
+                .attr("class", "score timeline-date-" + idx)
+                .attr("x", 15)
+                .attr("y", 1)
+                .style("text-anchor", "start")
+                .attr("alignment-baseline", "middle")
+                .text(d.date.slice(2,4) + '\'')
+
+                timelineMatch.append("text")
+                .attr("class", "score timeline-trophy-" + idx)
+                .attr("x", DETAILS_WIDTH-15)
+                .attr("y", 1)
+                .style("text-anchor", "end")
+                .attr("alignment-baseline", "middle")
+                .text(trophy(d.tournament))
 
                 timelineMatch.append("text")
                 .attr("class", "score timeline-score-" + idx)
@@ -321,22 +338,6 @@ function populateDetails(selectedMatch) {
                 .style("text-anchor", "middle")
                 .attr("alignment-baseline", "middle")
                 .text(d.home.score + " - " + d.away.score)
-
-                timelineMatch.append("text")
-                .attr("class", "score timeline-date-" + idx)
-                .attr("x", 15)
-                .attr("y", 1)
-                .style("text-anchor", "start")
-                .attr("alignment-baseline", "middle")
-                .text(d.date.slice(2,4) + '\'')
-
-                timelineMatch.append("text")
-                .attr("class", "score timeline-trophy-" + idx)
-                .attr("x", DETAILS_WIDTH-15)
-                .attr("y", 1)
-                .style("text-anchor", "end")
-                .attr("alignment-baseline", "middle")
-                .text(trophy(d.tournament))
 
                 timelineMatch.append("rect")
                 .attr("class", "timeline-rect timeline-rect-" + idx)
