@@ -410,8 +410,9 @@ function matchPrediction(homeTeam, awayTeam, homeAwayHistory) {
     var homeAway = homeAwayHistory[homeTeam][awayTeam];
     var awayHome = homeAwayHistory[awayTeam][homeTeam];
 
-    if (homeAway != null) { 
-        history = history.concat(homeAway) 
+    history = [homeAway, awayHome]
+
+    if (homeAway != null) {  
         if (homeAway.Competitive != null) {
             homeGoals.Competitive = homeGoals.Competitive.concat(homeAway.Competitive.map((d) => d.home_score));
             awayGoals.Competitive = awayGoals.Competitive.concat(homeAway.Competitive.map((d) => d.away_score));
@@ -422,7 +423,6 @@ function matchPrediction(homeTeam, awayTeam, homeAwayHistory) {
         }
     }
     if (awayHome != null) { 
-        history = history.concat(awayHome) 
         if (awayHome.Competitive != null) {
             homeGoals.Competitive = homeGoals.Competitive.concat(awayHome.Competitive.map((d) => d.away_score));
             awayGoals.Competitive = awayGoals.Competitive.concat(awayHome.Competitive.map((d) => d.home_score));
@@ -433,8 +433,12 @@ function matchPrediction(homeTeam, awayTeam, homeAwayHistory) {
         }
     }
 
-    var safeMean = (d) => d.length > 0 ? d3.mean(d) : 0
-    var weightedGoals = (goals) => Math.round(COMPETITIVE_WEIGHT * safeMean(goals.Competitive) + FRIENDLY_WEIGHT * safeMean(goals.Friendly))
+    var safeMean = (d, l) => l > 0 ? d/l : 0
+    var weighted = (weight, goals) => d3.sum(goals) * weight
+    var length = (goals) => goals.Competitive.length*COMPETITIVE_WEIGHT + goals.Friendly.length*FRIENDLY_WEIGHT
+    var value = (goals) => weighted(COMPETITIVE_WEIGHT,goals.Competitive) + weighted(FRIENDLY_WEIGHT,goals.Friendly)
+    var weightedGoals = (goals) => Math.round(safeMean(value(goals), length(goals)))
+
     var prediction = {
         home: {name: homeTeam, score: weightedGoals(homeGoals)},
         away: {name: awayTeam, score: weightedGoals(awayGoals)},
@@ -824,6 +828,5 @@ function toggleMatchType(matchType) {
     } else {
         FRIENDLY_WEIGHT = off ? 0 : 1
     }
-    console.log(FRIENDLY_WEIGHT, COMPETITIVE_WEIGHT)
     populateTournament();
 }
