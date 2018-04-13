@@ -15,7 +15,13 @@ var YEARS = 90;
 var SPECIAL_NATIONS = {"Saudi Arabia": "ksa", Spain: "esp", Japan: "jpn", Iran: "irn", Morocco: "mar", Iceland: "isl", Nigeria: "nga", "Costa Rica": "crc", "Switzerland": "sui", "Serbia": "srb"}
 var flagData, grpMatches, groupings, historicalMatches;
 
-var getNationSHORT = (name) => SPECIAL_NATIONS[name] == null ? name.slice(0,3).toLowerCase() : SPECIAL_NATIONS[name]
+function getNationSHORT(name) {
+    if (SPECIAL_NATIONS[name] == null) {
+        return name.slice(0,3).toLowerCase()
+    } else {
+        return SPECIAL_NATIONS[name]
+    }
+}
 
 function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
 
@@ -67,11 +73,16 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("height", 60)
     .style("stroke", "black")
     .style("stroke-width", 0.3)
-    .style("opacity", (d, idx) => (roundHeading == "Finals" && idx == 1) ? 0.7 : 0.1)
-    .style("fill", (d, idx) => (roundHeading == "Finals" && idx == 1) ? GOLD_COLOR : "white")
+    .style("opacity", 0.7)
+    .style("fill", function(d, idx) {
+        if (roundHeading == "Finals" && idx == 1){
+            return GOLD_COLOR
+        } else {
+            return "#103673"
+        }})
     .on("click", function(match) {
-        d3.selectAll(".match-rect").style("fill", "white").style("opacity", 0.1)
-        d3.select(this).style("fill", GOLD_COLOR).style("opacity", 0.7)
+        d3.selectAll(".match-rect").style("fill", "#103673")
+        d3.select(this).style("fill", GOLD_COLOR)
         populateDetails(match)
     });
 
@@ -791,17 +802,21 @@ function ready(error, flags, grps, grpMatches2018, history) {
     .append("div").attr("class", "select-style")
     .append("select").attr("class", "highlight-select")
 
-    highlight.on("change", function(d) {
+    
+     highlight.on("change", function(d) {
         var value = d3.select(this).property("value");
         if (value == "- Select Team -") {
             d3.selectAll(".team").style("opacity", 1)
             d3.selectAll(".link").style("opacity", 0.6)
         } else {
             d3.selectAll(".team").style("opacity", 0.2)
-            d3.selectAll(".team-" + getNationSHORT(value)).style("opacity", 1)
+            d3.selectAll(".team-" + getNationSHORT(value))
+                .transition().delay(function (d,i) {return i * 50;})
+                .duration(500)  
+                .style("opacity", 1);                     
         }
     });
-
+    
     highlight.selectAll("option")
     .data(teams).enter()
     .append("option")
