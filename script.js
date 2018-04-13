@@ -65,6 +65,30 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .data(matchesData).enter()
     .append("g").attr("class", "match")
     .attr("transform", (d, idx) => "translate(" + idx*matchWidth + ",0)");
+    
+    
+    var rectShadow = match.append("defs")
+    var shadowFilter = rectShadow.append("filter")
+        .attr("id", "drop-shadow")
+        .attr("height", "150%")
+
+    shadowFilter.append("feGaussianBlur")
+        .attr("in", "SourceAlpha")
+        .attr("stdDeviation", 3)
+        .attr("result", "blur");
+
+    var shadowOffset = shadowFilter.append("feOffset")
+        .attr("in", "blur")
+        .attr("dx", 4)
+        .attr("dy", 4)
+        .attr("result", "offsetBlur");
+
+    var shadowMerge = shadowFilter.append("feMerge");
+
+    shadowMerge.append("feMergeNode")
+        .attr("in", "offsetBlur")
+    shadowMerge.append("feMergeNode")
+        .attr("in", "SourceGraphic");
 
     match.append("rect")
     .attr("class", "match-rect")
@@ -82,9 +106,15 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
         }})
     .on("click", function(match) {
         d3.selectAll(".match-rect").style("fill", "#103673")
+        .attr("filter", 'none');
         d3.select(this).style("fill", GOLD_COLOR)
+            .transition()
+            .ease(d3.easeLinear)           
+            .attr("filter", 'url(#drop-shadow)')       
+        
         populateDetails(match)
     });
+    
 
 
     ['home', 'away'].forEach(function (side) {
@@ -701,7 +731,7 @@ function populateTournament() {
             .attr("class", "link team team-" + getNationSHORT(match.away.name))
             .attr("fill", "none")
             .style("stroke", GOLD_COLOR)
-            .style("stroke-width", 2)
+            .style("stroke-width", 1)
             .style("opacity", 0.6)
             .attr("d", generatePath(xAway, x2, y1, y2))
         }
@@ -810,10 +840,12 @@ function ready(error, flags, grps, grpMatches2018, history) {
             d3.selectAll(".link").style("opacity", 0.6)
         } else {
             d3.selectAll(".team").style("opacity", 0.2)
+
             d3.selectAll(".team-" + getNationSHORT(value))
-                .transition().delay(function (d,i) {return i * 50;})
-                .duration(500)  
-                .style("opacity", 1);                     
+                .transition().delay(function (d,i) {return i * 40;})
+                .ease(d3.easeLinear)
+                .style("opacity", 1);      
+ 
         }
     });
     
