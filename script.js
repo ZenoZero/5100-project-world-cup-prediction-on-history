@@ -690,7 +690,7 @@ function populateTournament() {
             .attr("class", "link team team-" + getNationSHORT(match.away.name))
             .attr("fill", "none")
             .style("stroke", GOLD_COLOR)
-            .style("stroke-width", 1)
+            .style("stroke-width", 2)
             .style("opacity", 0.6)
             .attr("d", generatePath(xAway, x2, y1, y2))
         }
