@@ -8,7 +8,7 @@ body {
     width: 100%;
     /* height: 100%; */
     padding: 20px 0;
-    background: linear-gradient(180deg, rgba(0, 44, 240, 0) 0%, rgba(14, 1, 133, 1) 40%),url("./images/wc-2018-bg-blue.jpg");
+    background: linear-gradient(180deg, rgba(0, 44, 240, 0) 0%, rgb(9, 26, 36) 30%),url("./images/wc-2018-bg-blue.jpg");
     /* background-repeat: repeat-x; */
     /* background-color: #031429; */
     color: white;
@@ -16,7 +16,7 @@ body {
 #container {
     width: 1400px;
     background-color: #031429, 0.3;
-    margin: 0 auto;
+    margin: 20 auto;
 }
 h1 {
     font-family: 'dusha_plusregular';
@@ -27,13 +27,15 @@ h1 {
     margin-bottom: 10px;
 }
 a {
+    font-family: 'dusha_plusregular';  
     color: #E4C484;
+    padding: 0 8px;
 }
 a.on {
     color: #E4C484;
 }
 a.off {
-    text-decoration: line-through;
+    color: rgb(124, 124, 124);
 }
 .round-header {
     fill: #E4C484;
@@ -76,45 +78,47 @@ svg text {
 .match-rect.selected {
     opacity: 1.0;
 }
+
 #trophy {
     clear: both;
     text-align: center;
     margin-bottom: 30px;
 }
 #credits {
-    text-align: center; 
+    text-align: left; 
     font-size: 12px;
     margin: 40px 0;
 }
 .select-style {
-    width: 120px;
+    font-family: 'dusha_plusregular';
+    text-align: center;
+    /* width: 120px; */
     border-radius: 0;
     overflow: hidden;
     display: inline-block;
-    padding: 0;
+    padding: 0 10px;
     opacity: 0.9;
     margin-bottom: -4px;
     margin-left: -5px;
 }
+
 .select-style select {
-    font-family: "Open Sans";
+    font-family: 'dusha_plusregular';
     color: #E4C484;
-    text-decoration: underline;
-    padding: 0 8px;
-    width: 130%;
-    font-size: 14px;
-    border: none;
+    padding: 0 10px;
+    /* width: 120%; */
+    text-align: center;
+    font-size: 16px;
     box-shadow: none;
     background: transparent;
     background-image: none;
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
 }
 .years-style {
-    width: auto;
-    margin-left: 0;
+    margin-left:1px;
 }
 .years-style select {
-    padding: 0;
+    padding: 0 2px;
 }
 
 .select-style select:focus {

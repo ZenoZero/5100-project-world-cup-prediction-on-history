@@ -10,26 +10,35 @@
 </head>
 
 <body>
-<div id="background">
-    <div id="container">
-        <h1>Who will win the World Cup 2018?</h1>
-        <div id="world-cup" class="row">
-            <div id="controls" style="font-size: 14px; font-weight:bold;">Will your favorite team win the World Cup 2018? Follow the journey of </div>
-            <p style="width:1100px; margin-top:10px; font-size: 14px;">We make predictions for the upcoming World Cup 2018 using the past encounters between nations in the last <span id="years-control"></span>. 
-                Each team score is the average score from these encounters.  
-                These encounters include 🏆<a id="competitive" href="javascript:toggleMatchType('competitive')">Competitive</a> 
-                and 🤝<a id="friendly" href="javascript:toggleMatchType('friendly')">Friendly</a> matches. In the case of draw in the knockout stage, a winner is pick at random. </p>
-            <p style="width:1100px; margin-top:10px; font-size: 14px;">To interact with the visualization, click on the underlined words to 1) follow a team, 2) select the years, or 3) the type of matches for prediction!</p>
-            <div id="tournament" class="left"></div>
-            <div id="details" class="right"></div>
-            <div style="clear:both"></div>
-        </div>
+    <div id="background">
+        <div id="container">
+            <h1>Who will win the World Cup 2018?</h1>
+            <div id="world-cup" class="row">
+                    <div id="controls" style="font-size: 14px; font-weight:bold;">
+                    We make predictions for the upcoming World Cup 2018
+                    <br> Here are the rules:
+                    <br> 1> Use the past encounters between nations in the last
+                    <a id="years-control"></a>.
+                    <br> 2> Each team score is the average score from these encounters. These encounters include
+                    <a id="competitive" href="javascript:toggleMatchType('competitive')">🏆Competitive</a>
+                    and
+                    <a id="friendly" href="javascript:toggleMatchType('friendly')">🤝Friendly</a> matches. 3> In the case of draw in the knockout stage, a winner is pick at random. </p>
+                Will your favorite team win the World Cup 2018? Follow the journey of 
+                <a id="team-select"></a>
+            </div>
 
-        <div id="credits">
-            Created by Zhengnan Zhao (zz528), Yong Lin Ong (yo228), Aisha Anwer (aa2499)
+                <p style="width:1100px; margin-top:10px; font-size: 14px;">To interact with the visualization, click on the underlined words to 1) follow a team, 2) select the years,
+                    or 3) the type of matches for prediction!</p>
+                <div id="tournament" class="left"></div>
+                <div id="details" class="right"></div>
+                <div style="clear:both"></div>
+            </div>
+
+            <div id="credits">
+                Created by Zhengnan Zhao (zz528), Yong Lin Ong (yo228), Aisha Anwer (aa2499)
+            </div>
         </div>
     </div>
-</div>
 </body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="./script.js"></script>

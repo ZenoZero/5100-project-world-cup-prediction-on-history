@@ -73,16 +73,16 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("height", 60)
     .style("stroke", "black")
     .style("stroke-width", 0.3)
-    .style("opacity", 0.7)
+    .style("opacity", 0.9)
     .style("fill", function(d, idx) {
         if (roundHeading == "Finals" && idx == 1){
-            return GOLD_COLOR
+            return "#E4C484"
         } else {
             return "#103673"
         }})
     .on("click", function(match) {
         d3.selectAll(".match-rect").style("fill", "#103673")
-        d3.select(this).style("fill", GOLD_COLOR)
+        d3.select(this).style("fill", "#E4C484")
         populateDetails(match)
     });
 
@@ -701,7 +701,7 @@ function populateTournament() {
             .attr("class", "link team team-" + getNationSHORT(match.away.name))
             .attr("fill", "none")
             .style("stroke", GOLD_COLOR)
-            .style("stroke-width", 2)
+            .style("stroke-width", 1)
             .style("opacity", 0.6)
             .attr("d", generatePath(xAway, x2, y1, y2))
         }
@@ -778,8 +778,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
     var periods = [];
     for(var i = 90; i >= 10; i -= 10) periods.push(i);
 
-    var yearsSelect = d3.select("#years-control")
-    .append("div").attr("class", "select-style years-style")
+    var yearsSelect = d3.select("#years-control").attr("class", "select-style")
     .append("select").attr("class", "highlight-select")
 
     yearsSelect.selectAll("option")
@@ -798,8 +797,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
     teams.push("- Select Team -")
     teams.sort((x, y) => d3.ascending(x, y))
     
-    var highlight = d3.select("#controls")
-    .append("div").attr("class", "select-style")
+    var highlight = d3.select("#team-select").attr("class", "select-style")
     .append("select").attr("class", "highlight-select")
 
     
@@ -813,7 +811,8 @@ function ready(error, flags, grps, grpMatches2018, history) {
             d3.selectAll(".team-" + getNationSHORT(value))
                 .transition().delay(function (d,i) {return i * 50;})
                 .duration(500)  
-                .style("opacity", 1);                     
+                .style("opacity", 1);   
+
         }
     });
     
