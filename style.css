@@ -8,7 +8,7 @@ body {
     width: 100%;
     /* height: 100%; */
     padding: 20px 0;
-    background: linear-gradient(180deg, rgba(0, 44, 240, 0) 0%, rgba(14, 1, 133, 1) 40%),url("./images/wc-2018-bg-blue.jpg");
+    background: linear-gradient(180deg, rgba(0, 44, 240, 0) 0%, rgb(30, 23, 65) 30%),url("./images/wc-2018-bg-blue.jpg");
     /* background-repeat: repeat-x; */
     /* background-color: #031429; */
     color: white;
@@ -26,7 +26,13 @@ h1 {
     padding: 20px 0 0;
     margin-bottom: 10px;
 }
-a {
+#controls{
+    font-size: 14px; 
+    font-weight:bold; 
+    width: 1100px;
+    margin-bottom: 20px;
+}
+/* a {
     color: #E4C484;
 }
 a.on {
@@ -34,7 +40,19 @@ a.on {
 }
 a.off {
     text-decoration: line-through;
+} */
+
+
+#typecheckbox{ 
+    width: 200px;
+    color: #E4C484;
+    border-color:  #E4C484;
+    border-width: 1px;
 }
+#typecheckbox:hover {
+    cursor: pointer;
+}
+
 .round-header {
     fill: #E4C484;
     font-size: 14px;
@@ -82,41 +100,43 @@ svg text {
     margin-bottom: 30px;
 }
 #credits {
-    text-align: center; 
+    text-align: left; 
     font-size: 12px;
     margin: 40px 0;
 }
 .select-style {
-    width: 120px;
+    width: 130px;
     border-radius: 0;
     overflow: hidden;
     display: inline-block;
     padding: 0;
     opacity: 0.9;
-    margin-bottom: -4px;
-    margin-left: -5px;
+    margin-top: 2px;
+    /* margin-left: 5px; */
 }
 .select-style select {
     font-family: "Open Sans";
     color: #E4C484;
-    text-decoration: underline;
-    padding: 0 8px;
-    width: 130%;
+    /* text-decoration: underline; */
+    padding: 0 20px;
     font-size: 14px;
-    border: none;
+    border-color:  #E4C484;
+    border-width: 1px;
     box-shadow: none;
     background: transparent;
     background-image: none;
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
 }
-.years-style {
+/* .years-style {
     width: auto;
     margin-left: 0;
 }
 .years-style select {
     padding: 0;
+} */
+.select-style select:hover {
+    cursor: pointer;
 }
-
 .select-style select:focus {
     outline: none;
 }

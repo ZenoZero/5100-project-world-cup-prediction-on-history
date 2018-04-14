@@ -81,6 +81,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
         .attr("in", "blur")
         .attr("dx", 4)
         .attr("dy", 4)
+        .attr("opacity",0.1)
         .attr("result", "offsetBlur");
 
     var shadowMerge = shadowFilter.append("feMerge");
@@ -100,14 +101,14 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .style("opacity", 0.7)
     .style("fill", function(d, idx) {
         if (roundHeading == "Finals" && idx == 1){
-            return GOLD_COLOR
+            return "#E4C484"
         } else {
             return "#103673"
         }})
     .on("click", function(match) {
         d3.selectAll(".match-rect").style("fill", "#103673")
         .attr("filter", 'none');
-        d3.select(this).style("fill", GOLD_COLOR)
+        d3.select(this).style("fill", "#E4C484")
             .transition()
             .ease(d3.easeLinear)           
             .attr("filter", 'url(#drop-shadow)')       
@@ -809,7 +810,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
     for(var i = 90; i >= 10; i -= 10) periods.push(i);
 
     var yearsSelect = d3.select("#years-control")
-    .append("div").attr("class", "select-style years-style")
+    .append("div").attr("class", "select-style")
     .append("select").attr("class", "highlight-select")
 
     yearsSelect.selectAll("option")
@@ -828,7 +829,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
     teams.push("- Select Team -")
     teams.sort((x, y) => d3.ascending(x, y))
     
-    var highlight = d3.select("#controls")
+    var highlight = d3.select("#team-control")
     .append("div").attr("class", "select-style")
     .append("select").attr("class", "highlight-select")
 
@@ -858,12 +859,23 @@ function ready(error, flags, grps, grpMatches2018, history) {
     populateTournament();
 }
 
-function toggleMatchType(matchType) {
-    var off = document.getElementById(matchType).classList.toggle('off')
+// function toggleMatchType(matchType) {
+//     var off = document.getElementById(matchType).classList.toggle('off')
+//     if (matchType == "competitive") {
+//         COMPETITIVE_WEIGHT = off ? 0 : 1
+//     } else {
+//         FRIENDLY_WEIGHT = off ? 0 : 1
+//     }
+//     populateTournament();
+// }
+
+
+function checkMatchType(matchType) {
+    var on = document.getElementById(matchType).checked
     if (matchType == "competitive") {
-        COMPETITIVE_WEIGHT = off ? 0 : 1
+        COMPETITIVE_WEIGHT = on ? 1 : 0
     } else {
-        FRIENDLY_WEIGHT = off ? 0 : 1
+        FRIENDLY_WEIGHT = on ? 1 : 0
     }
     populateTournament();
 }
