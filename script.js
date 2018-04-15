@@ -1,7 +1,7 @@
-var SVG_HEIGHT = 870;
+var SVG_HEIGHT = 900;
 var SVG_WIDTH = 1100;
 var DETAILS_WIDTH = 290;
-var DETAILS_HEIGHT = 850;
+var DETAILS_HEIGHT = 900;
 var TEAM_SPACING = 2;
 var DETAILS_TEAM_SPACING = 5;
 var ROUND_HEIGHT = 120;
@@ -35,7 +35,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     if (roundHeading == "Finals") {
         var roundHeader = round.append("text")
         .attr("class", "round-header")
-        .attr("x", SVG_WIDTH/4)
+        .attr("x", 60)
         .attr("y", 5)
         .style("text-anchor", "middle")
         .style("alighment-basline", "middle")
@@ -43,7 +43,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
 
         var roundHeader = round.append("text")
         .attr("class", "round-header")
-        .attr("x", SVG_WIDTH/4*3)
+        .attr("x", SVG_WIDTH/4*2)
         .attr("y", 5)
         .style("text-anchor", "middle")
         .style("alighment-basline", "middle")
@@ -64,7 +64,19 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     var match = matches.selectAll(".match")
     .data(matchesData).enter()
     .append("g").attr("class", "match")
-    .attr("transform", (d, idx) => "translate(" + idx*matchWidth + ",0)");
+    .attr("transform", function(d,idx){
+        if (roundHeading == "Finals" && idx == 1){
+            return "translate(" + (idx*matchWidth-275) + ",0)"
+        } else if (roundHeading == "Finals" && idx == 0){
+            return "translate(" + (idx*matchWidth-215) + ",0)"
+        }else{
+            return "translate(" + idx*matchWidth + ",0)"
+        }
+    });
+
+    
+
+    // .attr("transform", (d, idx) => "translate(" + idx*matchWidth + ",0)");
     
     
     var rectShadow = match.append("defs")
@@ -358,7 +370,7 @@ function populateDetails(selectedMatch) {
                 .attr("class", "score timeline-score-" + idx)
                 .attr("x", xScale(0)+15)
                 .attr("y", 2)
-                .style("text-anchor", "staart")
+                .style("text-anchor", "start")
                 .attr("alignment-baseline", "middle")
                 .text(footballs(d.away.score))
 
@@ -671,8 +683,10 @@ function populateTournament() {
             return (matchID-56) * (SVG_WIDTH/4) + (SVG_WIDTH/4)/2
         } else if (matchID < 62) {
             return (matchID-60) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2
-        } else {
-            return (matchID-62) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2
+        } else if (matchID == 62){
+            return (SVG_WIDTH/2)/2 -215
+        } else{
+            return (SVG_WIDTH/2)
         }
     }
     var getRoundNum = function (matchID) {
@@ -743,7 +757,7 @@ function populateTournament() {
             var generatePath = function(x1, x2, y1, y2) {
                 var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2
                 var pivotY = y1 < y2 ? y1 + (y2 - y1)/2 : y1 - (y1 - y2)/2
-                return ["M", x1, y1, "Q", x1, y1+30, pivotX, pivotY, x2, y2-30, x2, y2+15].join(" ")
+                return ["M", x1, y1, "Q", x1, y1+2, pivotX, pivotY, x2, y2-2, x2, y2+15].join(" ")
             }
             linkLayer.append("path")
             .attr("class", "link team team-" + getNationSHORT(winner.name))
@@ -751,7 +765,7 @@ function populateTournament() {
             .style("stroke", GOLD_COLOR)
             .style("stroke-width", 1)
             .style("opacity", 0.6)
-            .attr("d", generatePath(x1, SVG_WIDTH/2, y1, 5 * ROUND_HEIGHT + 50))
+            .attr("d", generatePath(x1, SVG_WIDTH/2, y1, 5 * ROUND_HEIGHT + 100))
         }
 
     })
@@ -771,7 +785,7 @@ function populateTournament() {
 
     var championRound = matchLayer.append("g")
     .attr("class", "round")
-    .attr("transform", "translate(0," + (5 * ROUND_HEIGHT + 50) + ")")
+    .attr("transform", "translate(0," + (5 * ROUND_HEIGHT +100) + ")")
 
     var trophy = championRound
     .append("image")

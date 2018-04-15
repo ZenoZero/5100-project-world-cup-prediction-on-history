@@ -44,12 +44,13 @@ a.off {
 
 
 #typecheckbox{ 
-    width: 200px;
     color: #E4C484;
-    border-color:  #E4C484;
-    border-width: 1px;
+}
+#typecheckbox input:checked {
+    color: rgb(247, 204, 120);
 }
 #typecheckbox:hover {
+    color: rgb(247, 204, 120);
     cursor: pointer;
 }
 
