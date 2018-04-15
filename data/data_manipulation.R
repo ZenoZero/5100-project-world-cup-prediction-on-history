@@ -5,7 +5,6 @@ library(lubridate)
 #read the csv files
 team_summary <- read_csv("results.csv")   #reading the history files
 country_summary <- read_csv("Groups_Flags.csv")  #reading the list of countries participating in 2018 world cup
-new_summary <- read_csv("new_sched.csv") # reading the schedules for first stage matches in 2018
 
 #subsetting the history dataset to remove the columns for country and city
 team_summary <- subset(team_summary, select = -c(city, country ))
@@ -39,4 +38,4 @@ team_summary <- team_summary[,c(6,1,2,3,4,5)][order(team_summary$Date),]
 
 
 #writing the dataset to a csv file
-write.csv(merged_data, file = "history_2018.csv", row.names = F)
+write.csv(team_summary, file = "history_2018.csv", row.names = F)
