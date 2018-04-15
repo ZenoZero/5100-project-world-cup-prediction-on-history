@@ -4,7 +4,7 @@ library(lubridate)
 
 #read the csv files
 team_summary <- read_csv("results.csv")   #reading the history files
-country_summary <- read_csv("Groups_Flags.csv")  #reading the list of countries participating in 2018 world cup
+country_summary <- read_csv("groups_flags.csv")  #reading the list of countries participating in 2018 world cup
 
 #subsetting the history dataset to remove the columns for country and city
 team_summary <- subset(team_summary, select = -c(city, country ))
