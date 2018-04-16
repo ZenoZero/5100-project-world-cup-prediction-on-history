@@ -113,13 +113,6 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
         d3.selectAll(".match-rect")
         .style("fill", "#103673")
         .attr("filter", 'none');
-<<<<<<< HEAD
-        d3.select(this).style("fill", "#E4C484")
-            .transition()
-            .ease(d3.easeLinear)           
-            .attr("filter", 'url(#drop-shadow)')       
-        populateDetails(match)
-=======
 
         d3.select(this).style("fill", GOLD_COLOR)
         .transition()
@@ -127,7 +120,6 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
         .attr("filter", 'url(#drop-shadow)');
         
         populateDetails(match);
->>>>>>> 8446d69df7381903994e13e1286066df1cdd13b3
     });
 
     ['home', 'away'].forEach(function (side) {
