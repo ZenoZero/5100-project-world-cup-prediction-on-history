@@ -1,6 +1,4 @@
 
-
-// <![CDATA[
 var bits = 80; // how many bits
 var speed = 20; // how fast - smaller is faster
 var bangs = 10; // how many can be launched simultaneously (note that using too many can slow the script down)
@@ -19,17 +17,6 @@ var swide = 1800;
 var shigh = 1200;
 var boddie;
 
-// if (typeof('addRVLoadEvent')!='function') function addRVLoadEvent(funky) {
-//   var oldonload=window.onload;
-//   if (typeof(oldonload)!='function') window.onload=funky;
-//   else window.onload=function() {
-//     if (oldonload) oldonload();
-//     funky();
-//   }
-// }
-// 
-// addRVLoadEvent(light_blue_touchpaper);
-// light_blue_touchpaper()
 firework()
 function firework() {
     if (document.getElementById) {
@@ -164,5 +151,3 @@ function set_width() {
     swide = sw_min;
     shigh = sh_min;
 }
-
-// ]]>
