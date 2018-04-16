@@ -75,6 +75,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     });
    
     // Source for drop shadow: http://bl.ocks.org/cpbotha/5200394
+    //Begin from Source
     var rectShadow = match.append("defs")
     var shadowFilter = rectShadow.append("filter")
     .attr("id", "drop-shadow")
@@ -97,6 +98,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("in", "offsetBlur");
     shadowMerge.append("feMergeNode")
     .attr("in", "SourceGraphic");
+    //End from Source
 
     match.append("rect")
     .attr("class", "match-rect")
