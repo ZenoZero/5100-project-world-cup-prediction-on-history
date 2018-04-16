@@ -1,7 +1,7 @@
-var SVG_HEIGHT = 900;
+var SVG_HEIGHT = 890;
 var SVG_WIDTH = 1100;
 var DETAILS_WIDTH = 290;
-var DETAILS_HEIGHT = 900;
+var DETAILS_HEIGHT = 890;
 var TEAM_SPACING = 2;
 var DETAILS_TEAM_SPACING = 5;
 var ROUND_HEIGHT = 120;
@@ -125,7 +125,6 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
             .transition()
             .ease(d3.easeLinear)           
             .attr("filter", 'url(#drop-shadow)')       
-        
         populateDetails(match)
     });
     
@@ -787,6 +786,11 @@ function populateTournament() {
     var championRound = matchLayer.append("g")
     .attr("class", "round")
     .attr("transform", "translate(0," + (5 * ROUND_HEIGHT +100) + ")")
+    // .on("mouseover",firework(100));
+
+    // var celebrite = d3.select("#trophy").append("svg").append("g")
+    // .attr("class", "round")
+    // .attr("transform", "translate(0," + (5 * ROUND_HEIGHT +100) + ")")
 
     var trophy = championRound
     .append("image")
@@ -796,6 +800,7 @@ function populateTournament() {
     .attr("x", SVG_WIDTH/2-50)
     .attr("y", 0)
     .attr("xlink:href", "./images/wc-2018-logo.png" )
+    // .on("click",light_blue_touchpaper());
     
     var championLabel = championRound.append("text")
     .attr("class", "round-header")
@@ -812,6 +817,10 @@ function populateTournament() {
     .style("font-size", "18px")
     .style("text-anchor", "middle")
     .text(matchPredictions[63].winner)
+
+
+    var celebrite = d3.select("celebrite").append("text")
+    .text("We are the champion!")
 }
 
 function ready(error, flags, grps, grpMatches2018, history) {

@@ -8,22 +8,19 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 </head>
-
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="./script.js"></script>
 <body>
     <div id="background">
-            <!-- <canvas id="canvas"></canvas> -->
+
         <div id="container">
             <h1>Who will win the World Cup 2018?</h1>
             <div id="world-cup" class="row">
                 <div id="controls">
                     <p>Will your favorite team win the World Cup 2018? We make predictions for the upcoming World Cup 2018 using
-<<<<<<< HEAD
-                        the history encounters between nations. <br>Each team score is the average score from these encounters.In
-                        the case of draw in the knockout stage, a winner is pick at random.
-=======
-                        the history encounters between nations.Each team score is the average score from these encounters.In
-                        the case of draw in the knockout stage, a winner is picked at random.
->>>>>>> fdf0edae363fae4b3feb0c94025ef84018f3411b
+                        the history encounters between nations.
+                        <br>Each team score is the average score from these encounters. In the case of draw in the knockout stage,
+                        a winner is pick at random.
                     </p>
                     <!-- <p>To interact with the visualization, click on the underlined words to 1) follow a team, 2) select the
                         years, 3) the type of matches for prediction!</p> -->
@@ -44,21 +41,22 @@
                         </label>
                     </a>
                 </div>
-                
-                <div id="tournament" class="left"></div>
+                <div id="tournament" class="left">
+                </div>
                 <div id="details" class="right"></div>
-                <div style="clear:both"></div>
+                <!-- <div style="clear:both"></div> -->
+                <div id="celebrite">We are the champion!</div>
             </div>
             <div id="credits">
-                Created by Zhengnan Zhao (zz528), Yong Lin Ong (yo228), Aisha Anwer (aa2499)
+                
+                <br>Created by Zhengnan Zhao (zz528), Yong Lin Ong (yo228), Aisha Anwer (aa2499)
             </div>
         </div>
     </div>
 
 </body>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="./script.js"></script>
-<!-- <script src="./firework.js"></script> -->
+
+<script src="./firework.js"></script>
 
 </html>

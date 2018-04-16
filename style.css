@@ -95,20 +95,34 @@ svg text {
 .match-rect.selected {
     opacity: 1.0;
 }
-.trophy {
+#trophy {
     clear: both;
     text-align: center;
     margin-bottom: 20px;
 }
 
-.trophy:hover{
-    cursor: pointer;
-}
+
 
 #credits {
-    text-align: left; 
+    text-align: center; 
     font-size: 12px;
-    margin: 40px 0;
+    margin-bottom: 20px;
+    width: 1100px;
+
+}
+#celebrite{
+    font-family: 'dusha_plusregular';
+    font-size: 24px;
+    text-shadow: 1px 1px rgba(255, 255, 255, 0.527);
+    color: #E4C484;
+    text-align: center; 
+    width: 1100px;
+    /* margin: 0px 435px; */
+}
+
+
+#celebrite:hover{
+    cursor: pointer;
 }
 .select-style {
     width: 130px;
