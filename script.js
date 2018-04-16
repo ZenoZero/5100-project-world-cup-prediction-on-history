@@ -78,6 +78,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
 
     // .attr("transform", (d, idx) => "translate(" + idx*matchWidth + ",0)");
     
+    //Source for drop shadow: http://bl.ocks.org/cpbotha/5200394
     
     var rectShadow = match.append("defs")
     var shadowFilter = rectShadow.append("filter")
