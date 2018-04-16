@@ -18,12 +18,19 @@
             <div id="world-cup" class="row">
                 <div id="controls">
                     <p>Will your favorite team win the World Cup 2018? We make predictions for the upcoming World Cup 2018 using
+<<<<<<< HEAD
                         the history encounters between nations.
                         <br>Each team score is the average score from these encounters. In the case of draw in the knockout stage,
                         a winner is pick at random.
+=======
+                        the past encounters between nations. Each team score is the average score from these encounters. In the case of draw in the knockout stage, a winner is picked at random.
                     </p>
-                    <!-- <p>To interact with the visualization, click on the underlined words to 1) follow a team, 2) select the
-                        years, 3) the type of matches for prediction!</p> -->
+                    <p style="margin-top:-5px">
+                        We decided to use past encounters for our predictions because it tell 
+                        us the difference in quality between two teams statistically and these historical results affect the mentality of the players. 
+                        </span>
+>>>>>>> 8446d69df7381903994e13e1286066df1cdd13b3
+                    </p>
                     <a id="team-control" style="display: inline-block;vertical-align: top; color: white; ">Follow a team
                         <br>
                     </a>
@@ -35,8 +42,8 @@
                         <br>
                         <label id="typecheckbox">🏆Competitive Matches
                             <input type="checkbox" id="competitive" onclick="checkMatchType('competitive')" checked>
-                        </label>
-                        <label id="typecheckbox">🤝Friendly Matches
+                        </label> 
+                        <label id="typecheckbox" style="margin-left:8px;">🤝Friendly Matches
                             <input type="checkbox" id="friendly" onclick="checkMatchType('friendly')" checked>
                         </label>
                     </a>
