@@ -792,9 +792,6 @@ function populateTournament() {
     .style("font-size", "18px")
     .style("text-anchor", "middle")
     .text(matchPredictions[63].winner);
-
-    var celebrate = d3.select("#celebrate").append("text")
-    .text("We are the champions!");
 }
 
 d3.select("#tournament").style("width", SVG_WIDTH);
