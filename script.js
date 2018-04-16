@@ -436,15 +436,6 @@ function populateDetails(selectedMatch) {
     }
 }
 
-d3.select("#tournament").style("width", SVG_WIDTH)
-d3.select("#credits").style("width", SVG_WIDTH)
-
-d3.queue()
-.defer(d3.csv, "./data/countries_flag_links.csv")
-.defer(d3.csv, "./data/groups_flags.csv")
-.defer(d3.csv, "./data/wc_2018_grp_schedule.csv")
-.defer(d3.csv, "./data/history_2018.csv")
-.await(ready);
 
 function matchPrediction(homeTeam, awayTeam, homeAwayHistory) {
 
@@ -813,6 +804,16 @@ function populateTournament() {
     .style("text-anchor", "middle")
     .text(matchPredictions[63].winner)
 }
+
+d3.select("#tournament").style("width", SVG_WIDTH)
+d3.select("#credits").style("width", SVG_WIDTH)
+
+d3.queue()
+.defer(d3.csv, "./data/countries_flag_links.csv")
+.defer(d3.csv, "./data/groups_flags.csv")
+.defer(d3.csv, "./data/wc_2018_grp_schedule.csv")
+.defer(d3.csv, "./data/history_2018.csv")
+.await(ready);
 
 function ready(error, flags, grps, grpMatches2018, history) {
 
