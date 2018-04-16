@@ -7,7 +7,7 @@ body {
     margin: 0 auto;
     width: 100%;
     /* height: 100%; */
-    padding: 20px 0;
+    padding: 0px 0;
     background: linear-gradient(180deg, rgba(0, 44, 240, 0) 0%, rgb(30, 23, 65) 30%),url("./images/wc-2018-bg-blue.jpg");
     /* background-repeat: repeat-x; */
     /* background-color: #031429; */
@@ -95,11 +95,16 @@ svg text {
 .match-rect.selected {
     opacity: 1.0;
 }
-#trophy {
+.trophy {
     clear: both;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
+
+.trophy:hover{
+    cursor: pointer;
+}
+
 #credits {
     text-align: left; 
     font-size: 12px;
@@ -118,6 +123,7 @@ svg text {
 .select-style select {
     font-family: "Open Sans";
     color: #E4C484;
+    width: 120px;
     /* text-decoration: underline; */
     padding: 0 20px;
     font-size: 14px;
@@ -141,3 +147,11 @@ svg text {
 .select-style select:focus {
     outline: none;
 }
+
+#background #canvas {
+    position: absolute;
+    top:0;
+    left:0;
+    background: transparent;
+    opacity: 1;
+  }

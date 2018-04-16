@@ -35,7 +35,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     if (roundHeading == "Finals") {
         var roundHeader = round.append("text")
         .attr("class", "round-header")
-        .attr("x", 60)
+        .attr("x", 275)
         .attr("y", 5)
         .style("text-anchor", "middle")
         .style("alighment-basline", "middle")
@@ -68,7 +68,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
         if (roundHeading == "Finals" && idx == 1){
             return "translate(" + (idx*matchWidth-275) + ",0)"
         } else if (roundHeading == "Finals" && idx == 0){
-            return "translate(" + (idx*matchWidth-215) + ",0)"
+            return "translate(" + (idx*matchWidth) + ",0)"
         }else{
             return "translate(" + idx*matchWidth + ",0)"
         }
@@ -684,7 +684,7 @@ function populateTournament() {
         } else if (matchID < 62) {
             return (matchID-60) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2
         } else if (matchID == 62){
-            return (SVG_WIDTH/2)/2 -215
+            return (SVG_WIDTH/2)/2
         } else{
             return (SVG_WIDTH/2)
         }

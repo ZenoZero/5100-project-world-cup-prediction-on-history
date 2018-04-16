@@ -11,24 +11,25 @@
 
 <body>
     <div id="background">
+            <!-- <canvas id="canvas"></canvas> -->
         <div id="container">
             <h1>Who will win the World Cup 2018?</h1>
             <div id="world-cup" class="row">
                 <div id="controls">
                     <p>Will your favorite team win the World Cup 2018? We make predictions for the upcoming World Cup 2018 using
-                        the history encounters between nations.Each team score is the average score from these encounters.In
+                        the history encounters between nations. <br>Each team score is the average score from these encounters.In
                         the case of draw in the knockout stage, a winner is pick at random.
                     </p>
                     <!-- <p>To interact with the visualization, click on the underlined words to 1) follow a team, 2) select the
                         years, 3) the type of matches for prediction!</p> -->
-                    <a id="team-control" style="display: inline-block;vertical-align: top; color: white; ">follow a team
+                    <a id="team-control" style="display: inline-block;vertical-align: top; color: white; ">Follow a team
                         <br>
                     </a>
-                    <a id="years-control" style="display: inline-block;vertical-align: top; color: white; margin-left: 20px; ">select history range
+                    <a id="years-control" style="display: inline-block;vertical-align: top; color: white; margin-left: 20px; ">Select history range
                         <br>
                     </a>
                     <a style="display: inline-block; vertical-align: top;color: white; margin-left: 20px; ">
-                        check the type of matches for prediction
+                        Select the type of matches for prediction
                         <br>
                         <label id="typecheckbox">🏆Competitive Matches
                             <input type="checkbox" id="competitive" onclick="checkMatchType('competitive')" checked>
@@ -38,18 +39,21 @@
                         </label>
                     </a>
                 </div>
+                
                 <div id="tournament" class="left"></div>
                 <div id="details" class="right"></div>
                 <div style="clear:both"></div>
             </div>
-
             <div id="credits">
                 Created by Zhengnan Zhao (zz528), Yong Lin Ong (yo228), Aisha Anwer (aa2499)
             </div>
         </div>
     </div>
+
 </body>
+
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="./script.js"></script>
+<!-- <script src="./firework.js"></script> -->
 
 </html>
