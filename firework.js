@@ -1,4 +1,3 @@
-
 var bits = 80; // how many bits
 var speed = 20; // how fast - smaller is faster
 var bangs = 10; // how many can be launched simultaneously (note that using too many can slow the script down)
@@ -29,11 +28,10 @@ function firework() {
         boddie.style.width = "2px";
         boddie.style.height = "2px";
         boddie.style.backgroundColor = "transparent";
-        
-        document.getElementById("celebrite").addEventListener("mouseover", function () {
+        document.getElementById("celebrate").addEventListener("mouseover", function () {
             bitSize=30;
         })
-        document.getElementById("celebrite").addEventListener("mouseout", function () {
+        document.getElementById("celebrate").addEventListener("mouseout", function () {
             bitSize=0;
         })
         document.body.appendChild(boddie);
@@ -71,9 +69,6 @@ function launch(N) {
     Ypos[N + "r"] = shigh - 5;
     bangheight[N] = Math.round((0.5 + Math.random()) * shigh * 0.4);
     dX[N + "r"] = (Math.random() - 0.5) * swide / bangheight[N];
-    // if (dX[N + "r"] > 1.25) stars[N + "r"].firstChild.nodeValue = "/";
-    // else if (dX[N + "r"] < -1.25) stars[N + "r"].firstChild.nodeValue = "\\";
-    // else stars[N + "r"].firstChild.nodeValue = "|";
     stars[N + "r"].style.color = colours[colour[N]];
 }
 
@@ -94,7 +89,6 @@ function bang(N) {
         }
         Xpos[i] += dX[i];
         Ypos[i] += (dY[i] += 1.25 / intensity[N]);
-
     }
     if (A != bits) setTimeout("bang(" + N + ")", speed);
 }

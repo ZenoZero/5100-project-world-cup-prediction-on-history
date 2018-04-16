@@ -75,7 +75,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     });
    
     // Source for drop shadow: http://bl.ocks.org/cpbotha/5200394
-    //Begin from Source
+    // Begin from Source
     var rectShadow = match.append("defs")
     var shadowFilter = rectShadow.append("filter")
     .attr("id", "drop-shadow")
@@ -98,7 +98,7 @@ function drawRound(roundHeading, matchesData, matchLayer, roundHeight) {
     .attr("in", "offsetBlur");
     shadowMerge.append("feMergeNode")
     .attr("in", "SourceGraphic");
-    //End from Source
+    // End from Source
 
     match.append("rect")
     .attr("class", "match-rect")
@@ -614,7 +614,7 @@ function populateTournament() {
 
     var svg = d3.select("#tournament").append("svg")
     .attr("width", SVG_WIDTH)
-    .attr("height",  SVG_HEIGHT)
+    .attr("height",  SVG_HEIGHT);
 
     var defs = svg.append("defs");
     flagData.forEach(function (flag, idx) {
@@ -626,7 +626,7 @@ function populateTournament() {
         .append("image")
         .attr("width", 25)
         .attr("height", 15)
-        .attr("xlink:href", flag.url)
+        .attr("xlink:href", flag.url);
 
         defs.append("pattern")
         .attr("width", "100%")
@@ -636,14 +636,14 @@ function populateTournament() {
         .append("image")
         .attr("width", DETAILS_FLAG_WIDTH)
         .attr("height", DETAILS_FLAG_WIDTH * 0.6)
-        .attr("xlink:href", flag.url)
+        .attr("xlink:href", flag.url);
     })
 
     var matchPredictions = worldCupPrediction(historicalMatches, grpMatches, groupings);
     
     // Draw progression links
     var linkLayer = svg.append("g").attr("class", "link-layer")
-    linkLayer.attr("transform", "translate(0,10)")
+    linkLayer.attr("transform", "translate(0,10)");
 
     var nextMatchID = function(name, currentMatchID) {
         for(var i = currentMatchID+1; i < matchPredictions.length; i++) {
@@ -654,58 +654,58 @@ function populateTournament() {
     }
     var getMatchWidth = function (matchID) {
         if (matchID < 16) {
-            return matchID * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2
+            return matchID * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2;
         } else if (matchID < 32) {
-            return (matchID-16) * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2
+            return (matchID-16) * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2;
         } else if (matchID < 48) {
-            return (matchID-32) * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2
+            return (matchID-32) * (SVG_WIDTH/16) + (SVG_WIDTH/16)/2;
         } else if (matchID < 56) {
-            return (matchID-48) * (SVG_WIDTH/8) + (SVG_WIDTH/8)/2
+            return (matchID-48) * (SVG_WIDTH/8) + (SVG_WIDTH/8)/2;
         } else if (matchID < 60) {
-            return (matchID-56) * (SVG_WIDTH/4) + (SVG_WIDTH/4)/2
+            return (matchID-56) * (SVG_WIDTH/4) + (SVG_WIDTH/4)/2;
         } else if (matchID < 62) {
-            return (matchID-60) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2
+            return (matchID-60) * (SVG_WIDTH/2) + (SVG_WIDTH/2)/2;
         } else if (matchID == 62){
-            return (SVG_WIDTH/2)/2
+            return (SVG_WIDTH/2)/2;
         } else{
-            return (SVG_WIDTH/2)
+            return (SVG_WIDTH/2);
         }
     }
     var getRoundNum = function (matchID) {
         if (matchID < 16) {
-            return 0
+            return 0;
         } else if (matchID < 32) {
-            return 1
+            return 1;
         } else if (matchID < 48) {
-            return 2
+            return 2;
         } else if (matchID < 56) {
-            return 3
+            return 3;
         } else if (matchID < 60) {
-            return 4
+            return 4;
         } else if (matchID < 62) {
-            return 5
+            return 5;
         } else {
-            return 6
+            return 6;
         }
     }
 
     matchPredictions.forEach(function(match, idx) {
 
-        var xHome = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(idx)
-        var xAway = 12.5 + (TEAM_SPACING) + getMatchWidth(idx)
+        var xHome = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(idx);
+        var xAway = 12.5 + (TEAM_SPACING) + getMatchWidth(idx);
         var y1 = 20 + 60 + 100 * getRoundNum(idx);
         var y2 = y1 + 40;
         var generatePath = function(x1, x2, y1, y2) {
-            var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2
-            return ["M", x1, y1, "Q", x1, y1+10, pivotX, y1+20, x2, y1+30, x2, y2].join(" ")
+            var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2;
+            return ["M", x1, y1, "Q", x1, y1+10, pivotX, y1+20, x2, y1+30, x2, y2].join(" ");
         }
 
         if (nextMatchID(match.home.name, idx) != null) {
             var nextMatch = matchPredictions[nextMatchID(match.home.name, idx)]
             if (match.home.name == nextMatch.home.name) {
-                var x2 = 12.5 - 25 - TEAM_SPACING + getMatchWidth(nextMatchID(match.home.name, idx))
+                var x2 = 12.5 - 25 - TEAM_SPACING + getMatchWidth(nextMatchID(match.home.name, idx));
             } else {
-                var x2 = 12.5 + TEAM_SPACING + getMatchWidth(nextMatchID(match.home.name, idx))
+                var x2 = 12.5 + TEAM_SPACING + getMatchWidth(nextMatchID(match.home.name, idx));
             }
             linkLayer.append("path")
             .attr("class", "link team team-" + getNationSHORT(match.home.name))
@@ -713,15 +713,15 @@ function populateTournament() {
             .style("stroke", GOLD_COLOR)
             .style("stroke-width", 1)
             .style("opacity", 0.6)
-            .attr("d", generatePath(xHome, x2, y1, y2))
+            .attr("d", generatePath(xHome, x2, y1, y2));
         }
 
         if (nextMatchID(match.away.name, idx) != null) {
-            var nextMatch = matchPredictions[nextMatchID(match.away.name, idx)]
+            var nextMatch = matchPredictions[nextMatchID(match.away.name, idx)];
             if (match.away.name == nextMatch.home.name) {
-                var x2 = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx))
+                var x2 = 12.5 + (-25-TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx));
             } else {
-                var x2 = 12.5 + (TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx))
+                var x2 = 12.5 + (TEAM_SPACING) + getMatchWidth(nextMatchID(match.away.name, idx));
             }
 
             linkLayer.append("path")
@@ -730,16 +730,16 @@ function populateTournament() {
             .style("stroke", GOLD_COLOR)
             .style("stroke-width", 1)
             .style("opacity", 0.6)
-            .attr("d", generatePath(xAway, x2, y1, y2))
+            .attr("d", generatePath(xAway, x2, y1, y2));
         }
 
         if (idx == 63) {
             var winner = (match.winner == match.home.name) ? match.home : match.away
             var x1 = (match.winner == match.home.name) ? xHome : xAway
             var generatePath = function(x1, x2, y1, y2) {
-                var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2
-                var pivotY = y1 < y2 ? y1 + (y2 - y1)/2 : y1 - (y1 - y2)/2
-                return ["M", x1, y1, "Q", x1, y1+2, pivotX, pivotY, x2, y2-2, x2, y2+15].join(" ")
+                var pivotX = x1 < x2 ? x1 + (x2 - x1)/2 : x1 - (x1 - x2)/2;
+                var pivotY = y1 < y2 ? y1 + (y2 - y1)/2 : y1 - (y1 - y2)/2;
+                return ["M", x1, y1, "Q", x1, y1+2, pivotX, pivotY, x2, y2-2, x2, y2+15].join(" ");
             }
             linkLayer.append("path")
             .attr("class", "link team team-" + getNationSHORT(winner.name))
@@ -747,13 +747,12 @@ function populateTournament() {
             .style("stroke", GOLD_COLOR)
             .style("stroke-width", 1)
             .style("opacity", 0.6)
-            .attr("d", generatePath(x1, SVG_WIDTH/2, y1, 5 * ROUND_HEIGHT + 100))
+            .attr("d", generatePath(x1, SVG_WIDTH/2, y1, 5 * ROUND_HEIGHT + 100));
         }
-
     })
 
     var matchLayer = svg.append("g").attr("class", "match-layer")
-    matchLayer.attr("transform", "translate(0,10)")
+    matchLayer.attr("transform", "translate(0,10)");
 
     drawRound("Group Stage Match #1", matchPredictions.slice(0, 16), matchLayer, 0);
     drawRound("Group Stage Match #2", matchPredictions.slice(16, 32), matchLayer, 100);
@@ -763,16 +762,11 @@ function populateTournament() {
     drawRound("Semi Finals", matchPredictions.slice(60, 62), matchLayer, 500);
     drawRound("Finals", matchPredictions.slice(62, 64), matchLayer, 600);
 
-    populateDetails(matchPredictions[63])
+    populateDetails(matchPredictions[63]);
 
     var championRound = matchLayer.append("g")
     .attr("class", "round")
-    .attr("transform", "translate(0," + (5 * ROUND_HEIGHT +100) + ")")
-    // .on("mouseover",firework(100));
-
-    // var celebrite = d3.select("#trophy").append("svg").append("g")
-    // .attr("class", "round")
-    // .attr("transform", "translate(0," + (5 * ROUND_HEIGHT +100) + ")")
+    .attr("transform", "translate(0," + (5 * ROUND_HEIGHT +100) + ")");
 
     var trophy = championRound
     .append("image")
@@ -781,8 +775,7 @@ function populateTournament() {
     .attr("height", 140)
     .attr("x", SVG_WIDTH/2-50)
     .attr("y", 0)
-    .attr("xlink:href", "./images/wc-2018-logo.png" )
-    // .on("click",light_blue_touchpaper());
+    .attr("xlink:href", "./images/wc-2018-logo.png");
     
     var championLabel = championRound.append("text")
     .attr("class", "round-header")
@@ -790,7 +783,7 @@ function populateTournament() {
     .attr("y", 150)
     .style("font-size", "20px")
     .style("text-anchor", "middle")
-    .text("CHAMPIONS")
+    .text("CHAMPIONS");
 
     var championNation = championRound.append("text")
     .attr("class", "round-header")
@@ -798,15 +791,14 @@ function populateTournament() {
     .attr("y", 170)
     .style("font-size", "18px")
     .style("text-anchor", "middle")
-    .text(matchPredictions[63].winner)
+    .text(matchPredictions[63].winner);
 
-
-    var celebrite = d3.select("celebrite").append("text")
-    .text("We are the champion!")
+    var celebrate = d3.select("#celebrate").append("text")
+    .text("We are the champions!");
 }
 
-d3.select("#tournament").style("width", SVG_WIDTH)
-d3.select("#credits").style("width", SVG_WIDTH)
+d3.select("#tournament").style("width", SVG_WIDTH);
+d3.select("#credits").style("width", SVG_WIDTH);
 
 d3.queue()
 .defer(d3.csv, "./data/countries_flag_links.csv")
@@ -827,7 +819,7 @@ function ready(error, flags, grps, grpMatches2018, history) {
 
     var yearsSelect = d3.select("#years-control")
     .append("div").attr("class", "select-style")
-    .append("select").attr("class", "highlight-select")
+    .append("select").attr("class", "highlight-select");
 
     yearsSelect.selectAll("option")
     .data(periods).enter()
@@ -837,29 +829,29 @@ function ready(error, flags, grps, grpMatches2018, history) {
 
     yearsSelect.on("change", function(d) {
         YEARS = Number(d3.select(this).property("value"));
-        historicalMatches = history.filter((match) => Number(match.Date.slice(0,4)) > (2018-YEARS))
+        historicalMatches = history.filter((match) => Number(match.Date.slice(0,4)) > (2018-YEARS));
         populateTournament();
     });
 
     var teams = grps.map((d) => d.Team);
-    teams.push("- Select Team -")
-    teams.sort((x, y) => d3.ascending(x, y))
+    teams.push("- Select Team -");
+    teams.sort((x, y) => d3.ascending(x, y));
     
     var highlight = d3.select("#team-control")
     .append("div").attr("class", "select-style")
-    .append("select").attr("class", "highlight-select")
+    .append("select").attr("class", "highlight-select");
 
      highlight.on("change", function(d) {
         var value = d3.select(this).property("value");
         if (value == "- Select Team -") {
-            d3.selectAll(".team").style("opacity", 1)
-            d3.selectAll(".link").style("opacity", 0.6)
+            d3.selectAll(".team").style("opacity", 1);
+            d3.selectAll(".link").style("opacity", 0.6);
         } else {
             d3.selectAll(".team").style("opacity", 0.2)
             d3.selectAll(".team-" + getNationSHORT(value))
-                .transition().delay(function (d,i) {return i * 40;})
-                .ease(d3.easeLinear)
-                .style("opacity", 1);      
+            .transition().delay((d,i) => i * 40)
+            .ease(d3.easeLinear)
+            .style("opacity", 1);
         }
     });
     
@@ -875,9 +867,9 @@ function ready(error, flags, grps, grpMatches2018, history) {
 function checkMatchType(matchType) {
     var on = document.getElementById(matchType).checked
     if (matchType == "competitive") {
-        COMPETITIVE_WEIGHT = on ? 1 : 0
+        COMPETITIVE_WEIGHT = on ? 1 : 0;
     } else {
-        FRIENDLY_WEIGHT = on ? 1 : 0
+        FRIENDLY_WEIGHT = on ? 1 : 0;
     }
     populateTournament();
 }

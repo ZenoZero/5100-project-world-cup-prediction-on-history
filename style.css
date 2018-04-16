@@ -6,11 +6,8 @@ body {
     font-family: "Open Sans";
     margin: 0 auto;
     width: 100%;
-    /* height: 100%; */
     padding: 0px 0;
     background: linear-gradient(180deg, rgba(0, 44, 240, 0) 0%, rgb(30, 23, 65) 30%),url("./images/wc-2018-bg-blue.jpg");
-    /* background-repeat: repeat-x; */
-    /* background-color: #031429; */
     color: white;
 }
 #container {
@@ -32,18 +29,7 @@ h1 {
     width: 1100px;
     margin-bottom: 20px;
 }
-/* a {
-    color: #E4C484;
-}
-a.on {
-    color: #E4C484;
-}
-a.off {
-    text-decoration: line-through;
-} */
-
-
-#typecheckbox{ 
+#typecheckbox { 
     color: #E4C484;
 }
 #typecheckbox input:checked {
@@ -53,7 +39,6 @@ a.off {
     color: rgb(247, 204, 120);
     cursor: pointer;
 }
-
 .round-header {
     fill: #E4C484;
     font-size: 14px;
@@ -100,29 +85,26 @@ svg text {
     text-align: center;
     margin-bottom: 20px;
 }
-
-
-
 #credits {
     text-align: center; 
     font-size: 12px;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 40px;
     width: 1100px;
-
 }
-#celebrite{
+#celebrate {
     font-family: 'dusha_plusregular';
     font-size: 24px;
     text-shadow: 1px 1px rgba(255, 255, 255, 0.527);
     color: #E4C484;
     text-align: center; 
     width: 1100px;
-    /* margin: 0px 435px; */
 }
-
-
-#celebrite:hover{
+#celebrate:hover {
     cursor: pointer;
+}
+#team-control .select-style, #team-control .select-style select {
+    width: 150px;
 }
 .select-style {
     width: 130px;
@@ -132,13 +114,11 @@ svg text {
     padding: 0;
     opacity: 0.9;
     margin-top: 2px;
-    /* margin-left: 5px; */
 }
 .select-style select {
     font-family: "Open Sans";
     color: #E4C484;
     width: 120px;
-    /* text-decoration: underline; */
     padding: 0 20px;
     font-size: 14px;
     border-color:  #E4C484;
@@ -146,22 +126,13 @@ svg text {
     box-shadow: none;
     background: transparent;
     background-image: none;
-    /* -webkit-appearance: none; */
 }
-/* .years-style {
-    width: auto;
-    margin-left: 0;
-}
-.years-style select {
-    padding: 0;
-} */
 .select-style select:hover {
     cursor: pointer;
 }
 .select-style select:focus {
     outline: none;
 }
-
 #background #canvas {
     position: absolute;
     top:0;
